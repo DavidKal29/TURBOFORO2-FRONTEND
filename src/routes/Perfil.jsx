@@ -60,7 +60,7 @@ export default function Perfil() {
         
         <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
           <img
-            src='/avatars/jengibre.jpg'
+            src='/avatars/tyson.webp'
             alt="avatar"
             className="w-32 h-32 rounded-full border-4 border-indigo-500 shadow-lg object-cover"
           />

@@ -5,6 +5,8 @@ import { useAppContext } from "../context/AppContext";
 export default function Categorias() {
   const {categorias} = useAppContext()
 
+  
+
   return (
     <div className="bg-gray-50 rounded-xl shadow-lg p-6 mt-12 mb-12 w-full">
       <h1 className="font-extrabold text-4xl md:text-5xl text-center mb-6 text-gray-800">

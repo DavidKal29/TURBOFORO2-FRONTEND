@@ -1,8 +1,25 @@
-import React from "react";
-import { useParams } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 
 export default function Categoria() {
   const { categoria } = useParams();
+  const {categorias} = useAppContext()
+  const navigate = useNavigate()
+
+  const comprobarCategoria = ()=>{
+    const encontrado = categorias.find(c=>c.nombre===categoria)
+
+    if (!encontrado) {
+        navigate('/')
+    }
+  }
+
+  useEffect(()=>{
+    comprobarCategoria()
+
+    document.title = `${categoria}`
+  },[])
 
   // Generamos 40 hilos ficticios
   const hilos = Array.from({ length: 40 })

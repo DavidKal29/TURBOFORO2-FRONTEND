@@ -29,7 +29,16 @@ export default function Register() {
       method:'POST',
       body: JSON.stringify(form),
       headers:{'Content-Type':'application/json'}
-    }).then(res=>res.json()).then(data=>{alert(data.message)}).catch(err=>{alert(err);})
+    }).then(res=>res.json())
+          .then(data=>{
+            if (data.user) {
+              setUser(data.user)
+              navigate('/profile')
+            }else{
+              alert(data.message)
+            }
+          })
+          .catch(err=>{alert(err);})
 
 
   }

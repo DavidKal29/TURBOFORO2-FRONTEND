@@ -1,4 +1,4 @@
-const { createContext, useContext, useState } = require("react");
+const { createContext, useContext, useState, useEffect } = require("react");
 
 
 const AppContext = createContext()
@@ -6,8 +6,26 @@ const AppContext = createContext()
 
 export function AppProvider({children}){
 
-
     const [user,setUser] = useState(null)
+
+    useEffect(()=>{
+    
+        fetch('http://localhost:5000/perfil',{credentials:'include',method:'GET'})
+        .then(res=>res.json())
+        .then(data=>{
+          if (data.loggedIn) {
+            console.log('El usuario está logueado');
+            setUser(data.user)
+            
+          }else{
+            console.log('El usuario no está logueado');
+          }
+        })
+    
+    
+      },[])
+
+
 
     const categorias = [
         { nombre: "General", icono: "fa-earth-americas", color: "blue-500" },

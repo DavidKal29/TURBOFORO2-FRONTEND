@@ -1,11 +1,27 @@
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 
 
 export default function Header() {
 
   const {user,setUser} = useAppContext()
+  const navigate = useNavigate()
+
+  const logout = () =>{
+    fetch('http://localhost:5000/logout',{credentials:'include',method:'GET'})
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.loggedOut) {
+        console.log('El usuario ha cerrado sesión');
+        setUser(null)
+        navigate('/login')
+        
+      }else{
+        console.log('El usuario no está logueado');
+      }
+    })
+  }
 
   useEffect(()=>{
     fetch('http://localhost:5000/perfil',{credentials:'include',method:'GET'})
@@ -34,11 +50,18 @@ export default function Header() {
 
       {user ? 
         (<>
-          <Link to="/profile">
+          <div className="flex items-center gap-4 md:gap-6">
+            <Link to="/profile">
               <button className="bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
                 <i class="fa-solid fa-user"></i> {user.username}
               </button>
-          </Link>
+            </Link>
+            <button onClick={logout}>
+              <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+                Cerrar Sesión
+              </button>
+            </button>
+          </div>
         </>) 
       
       : 

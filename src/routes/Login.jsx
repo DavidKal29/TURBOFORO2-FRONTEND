@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react'
 
 export default function Login() {
 
+  useEffect(()=>{
+    document.title = 'Login'
+  },[])
+
   return (
     <div className="flex py-[150px] justify-center items-center bg-gradient-to-r from-blue-700 to-blue-500 px-4">
       <form

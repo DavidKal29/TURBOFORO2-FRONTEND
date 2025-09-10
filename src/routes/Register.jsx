@@ -3,6 +3,10 @@ import React, { useEffect, useState } from 'react'
 
 export default function Register() {
 
+  useEffect(()=>{
+    document.title = 'Register'
+  },[])
+
   return (
     <div className="flex py-[150px] justify-center items-center bg-gradient-to-r from-purple-700 to-purple-500 px-4">
       <form

@@ -1,6 +1,26 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 
 export default function Footer() {
+
+  const {user,setUser} = useAppContext()
+  const navigate = useNavigate()
+
+  const logout = () =>{
+    fetch('http://localhost:5000/logout',{credentials:'include',method:'GET'})
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.loggedOut) {
+        console.log('El usuario ha cerrado sesión');
+        setUser(null)
+        navigate('/login')
+        
+      }else{
+        console.log('El usuario no está logueado');
+      }
+    })
+  }
+
   return (
     <footer className="bg-gradient-to-r from-gray-900 via-black to-gray-900 text-gray-300 py-10 px-6 border-t border-gray-700 shadow-inner">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -21,8 +41,25 @@ export default function Footer() {
           <h2 className="text-lg font-bold text-gray-200 mb-3">Navegación</h2>
           <ul className="space-y-2 text-sm">
             <li><Link to="/" className="hover:text-white transition-colors">Inicio</Link></li>
-            <li><Link to="/login" className="hover:text-white transition-colors">Inicar Sesión</Link></li>
-            <li><Link to="/register" className="hover:text-white transition-colors">Crear Cuenta</Link></li>
+            {
+              user ? 
+              (
+                <>
+                  <li><Link to="/profile" className="hover:text-white transition-colors">{user.username}</Link></li>
+                  <li><button onClick={logout} className="hover:text-white transition-colors">Cerrar sesión</button></li>
+                </>
+              ) 
+              
+              : 
+              
+              (
+                <>
+                  <li><Link to="/login" className="hover:text-white transition-colors">Iniciar Sesión</Link></li>
+                  <li><Link to="/register" className="hover:text-white transition-colors">Crear Cuenta</Link></li>
+                </>
+
+              )
+            }
           </ul>
         </div>
 

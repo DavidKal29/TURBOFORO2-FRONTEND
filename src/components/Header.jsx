@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 
+
 export default function Header() {
   return (
     <header className="bg-gradient-to-r from-gray-800 via-gray-900 to-black shadow-2xl z-50 flex justify-between items-center py-3 px-6 sm:px-12 fixed top-0 w-full h-[80px] md:h-[100px]">
 
       {/* Logo */}
       <Link to="/" className="w-[16%] min-[568px]:w-[12%] sm:w-[10%] lg:w-[8%] xl:w-[6%]">
-        <img className="w-full" src="./logo.png" alt="Logo" />
+        <img className="w-full" src="/logo.png" alt="Logo" />
       </Link>
 
       {/* Botones */}

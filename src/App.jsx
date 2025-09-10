@@ -10,6 +10,7 @@ import Footer from './components/Footer';
 import Login from './routes/Login';
 import Register from './routes/Register';
 import Categoria from './routes/Categoria';
+import Perfil from './routes/Perfil';
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/register' element={<Register></Register>}></Route>
         <Route path='/categoria/:categoria' element={<Categoria></Categoria>}></Route>
+        <Route path='/profile' element={<Perfil></Perfil>}></Route>
       </Routes>
 
       <Footer></Footer>

@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react' 
+import { useAppContext } from '../context/AppContext'
+import { useNavigate } from 'react-router-dom'
 
 
 export default function Login() {
+
+  const {user,setUser} = useAppContext()  
+  const navigate = useNavigate()
 
   const [form,setForm] = useState({
       email:'',
@@ -29,8 +34,25 @@ export default function Login() {
     }
   
 
+  
+
   useEffect(()=>{
     document.title = 'Login'
+
+    fetch('http://localhost:5000/perfil',{credentials:'include',method:'GET'})
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.loggedIn) {
+        console.log('El usuario está logueado');
+        setUser(data.user)
+        navigate('/profile')
+        
+        
+      }else{
+        console.log('El usuario no está logueado');
+      }
+    })
+
 
   },[])
 

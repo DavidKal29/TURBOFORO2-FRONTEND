@@ -34,7 +34,7 @@ export default function Header() {
 
       {user ? 
         (<>
-          <Link to="/perfil">
+          <Link to="/profile">
               <button className="bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
                 <i class="fa-solid fa-user"></i> {user.username}
               </button>

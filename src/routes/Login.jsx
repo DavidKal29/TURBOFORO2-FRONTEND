@@ -3,6 +3,32 @@ import React, { useEffect, useState } from 'react'
 
 export default function Login() {
 
+  const [form,setForm] = useState({
+      email:'',
+      password:''
+    })
+  
+    const handleChange =(e)=>{
+      setForm({
+        ...form,
+        [e.target.name]: e.target.value
+      })
+    }
+  
+    const handleSubmit =(e)=>{
+      e.preventDefault()
+  
+      fetch('http://localhost:5000/login',{
+        credentials:'include',
+        method:'POST',
+        body: JSON.stringify(form),
+        headers:{'Content-Type':'application/json'}
+      }).then(res=>res.json()).then(data=>{alert(data.message)}).catch(err=>{alert(err);})
+  
+  
+    }
+  
+
   useEffect(()=>{
     document.title = 'Login'
   },[])
@@ -11,6 +37,7 @@ export default function Login() {
     <div className="flex py-[150px] justify-center items-center bg-gradient-to-r from-blue-700 to-blue-500 px-4">
       <form
         className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col gap-6"
+        onSubmit={handleSubmit}
       >
         <h1 className="text-3xl font-extrabold text-center text-blue-800">
           Iniciar Sesión
@@ -24,6 +51,8 @@ export default function Login() {
           <input
             type="email"
             name="email"
+            value={form.email}
+            onChange={handleChange}
             placeholder="Introduce tu email"
             className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -40,6 +69,8 @@ export default function Login() {
           <input
             type="password"
             name="password"
+            value={form.password}
+            onChange={handleChange}
             autoComplete='off'
             placeholder="Introduce tu contraseña"
             className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

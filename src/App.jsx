@@ -9,6 +9,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Login from './routes/Login';
 import Register from './routes/Register';
+import Categoria from './routes/Categoria';
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path='/' element={<Home></Home>}></Route>
         <Route path='/login' element={<Login></Login>}></Route>
         <Route path='/register' element={<Register></Register>}></Route>
+        <Route path='/categoria/:categoria' element={<Categoria></Categoria>}></Route>
       </Routes>
 
       <Footer></Footer>

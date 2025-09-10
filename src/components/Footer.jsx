@@ -8,7 +8,7 @@ export default function Footer() {
         {/* Logo + descripción */}
         <div>
           <Link to="/" className="block w-[40%] sm:w-[25%] md:w-[50%] mb-4">
-            <img src="./logo.png" alt="Logo" className="w-full" />
+            <img src="/logo.png" alt="Logo" className="w-full" />
           </Link>
           <p className="text-sm text-gray-400 leading-relaxed">
             Tu comunidad para debatir, compartir y descubrir los temas más populares.  

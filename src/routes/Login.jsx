@@ -31,6 +31,7 @@ export default function Login() {
 
   useEffect(()=>{
     document.title = 'Login'
+
   },[])
 
   return (

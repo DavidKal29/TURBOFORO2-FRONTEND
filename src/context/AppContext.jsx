@@ -1,10 +1,13 @@
-const { createContext, useContext } = require("react");
+const { createContext, useContext, useState } = require("react");
 
 
 const AppContext = createContext()
 
 
 export function AppProvider({children}){
+
+
+    const [user,setUser] = useState(null)
 
     const categorias = [
         { nombre: "General", icono: "fa-earth-americas", color: "blue-500" },
@@ -26,7 +29,7 @@ export function AppProvider({children}){
     ];
 
     return (
-        <AppContext.Provider value={{categorias}}>
+        <AppContext.Provider value={{categorias,user,setUser}}>
             {children}
         </AppContext.Provider>
     )

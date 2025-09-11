@@ -15,6 +15,7 @@ export default function Perfil() {
       .then(data => {
         if (!data.loggedIn) {
           console.log('El usuario no está logueado')
+          
           setUser(null)
           navigate('/login')
         } else {
@@ -62,11 +63,19 @@ export default function Perfil() {
         
         
         <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
-          <img
-            src='/avatars/tyson.webp'
-            alt="avatar"
-            className="w-32 h-32 rounded-full border-4 border-indigo-500 shadow-lg object-cover"
-          />
+          <div className="relative">
+                <img
+                src={`/avatars/avatar${user?.avatar}.webp` || `/avatars/avatar20.webp`}
+                alt="avatar"
+                className="w-32 h-32 rounded-full border-4 border-gray-300 shadow-lg object-cover"
+                />
+                <Link
+                to="/avatares" 
+                className="absolute bottom-2 right-2 bg-red-600 text-white w-8 h-8 flex items-center justify-center rounded-full shadow-md transition"
+                >
+                <i className="fas fa-pencil-alt text-sm"></i>
+                </Link>
+            </div>
 
           
           <div className="text-center md:text-left flex flex-col gap-2">

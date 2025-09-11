@@ -12,6 +12,7 @@ import Register from './routes/Register';
 import Categoria from './routes/Categoria';
 import Perfil from './routes/Perfil';
 import EditProfile from './routes/EditProfile';
+import Avatares from './routes/Avatares';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route path='/categoria/:categoria' element={<Categoria></Categoria>}></Route>
         <Route path='/profile' element={<Perfil></Perfil>}></Route>
         <Route path='/edit_profile' element={<EditProfile></EditProfile>}></Route>
+        <Route path='/avatares' element={<Avatares></Avatares>}></Route>
       </Routes>
 
       <Footer></Footer>

@@ -11,6 +11,7 @@ import Login from './routes/Login';
 import Register from './routes/Register';
 import Categoria from './routes/Categoria';
 import Perfil from './routes/Perfil';
+import EditProfile from './routes/EditProfile';
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
         <Route path='/register' element={<Register></Register>}></Route>
         <Route path='/categoria/:categoria' element={<Categoria></Categoria>}></Route>
         <Route path='/profile' element={<Perfil></Perfil>}></Route>
+        <Route path='/edit_profile' element={<EditProfile></EditProfile>}></Route>
       </Routes>
 
       <Footer></Footer>

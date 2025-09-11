@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 export default function Perfil() {
   const { user, setUser } = useAppContext()
@@ -57,6 +58,8 @@ export default function Perfil() {
 
       
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl p-8">
+
+        
         
         <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
           <img
@@ -64,10 +67,17 @@ export default function Perfil() {
             alt="avatar"
             className="w-32 h-32 rounded-full border-4 border-indigo-500 shadow-lg object-cover"
           />
-          <div className="text-center md:text-left">
+
+          
+          <div className="text-center md:text-left flex flex-col gap-2">
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
               {user?.username || 'Username'} 
             </h1>
+            <Link to="/edit_profile">
+                <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+                    Editar Perfil
+                </button>
+            </Link>
           </div>
         </div>
 

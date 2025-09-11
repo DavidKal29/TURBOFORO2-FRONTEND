@@ -9,8 +9,9 @@ export default function EditProfile() {
   const navigate = useNavigate()
 
   const [form,setForm] = useState({
-    email:user.email,
-    username:user.username
+    email:user?.email || '',
+    username:user?.username || '',
+    description:user?.description || ''
   })
 
   const handleChange =(e)=>{
@@ -96,6 +97,21 @@ export default function EditProfile() {
             onChange={handleChange}
             placeholder="Introduce tu username"
             className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        {/* Description */}
+        <div className="flex flex-col">
+          <label htmlFor="description" className="text-sm font-semibold text-gray-600">
+            Description
+          </label>
+          <textarea
+            type="text"
+            name="description"
+            value={form.description}
+            onChange={handleChange}
+            placeholder="Describete"
+            className="resize-none mt-1 px-4 py-2 h-[10rem] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 

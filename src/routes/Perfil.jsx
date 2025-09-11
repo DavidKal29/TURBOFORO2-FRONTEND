@@ -114,7 +114,7 @@ export default function Perfil() {
           <div className="bg-pink-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Miembro desde</h3>
             <p className="text-lg font-medium text-pink-600 mt-2">
-              08-may-2003
+              {user?.fecha_registro}
             </p>
           </div>
         </div>

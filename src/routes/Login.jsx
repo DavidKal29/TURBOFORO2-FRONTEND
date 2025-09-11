@@ -34,7 +34,11 @@ export default function Login() {
           setUser(data.user)
           navigate('/profile')
         }else{
-          alert(data.message)
+          if (data.error) {
+            alert(data.error.msg)
+          }else{
+            alert(data.message)
+          }
         }
       })
       .catch(err=>{alert(err);})

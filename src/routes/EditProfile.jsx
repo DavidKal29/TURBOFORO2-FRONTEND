@@ -31,9 +31,14 @@ export default function EditProfile() {
       headers:{'Content-Type':'application/json'}
     }).then(res=>res.json())
           .then(data=>{
-            alert(data.message)
             if (data.changed) {
               navigate('/profile')
+            }else{
+                if (data.error) {
+                    alert(data.error.msg)
+                }else{
+                    alert(data.message)
+                }
             }
           })
           .catch(err=>{alert(err);})

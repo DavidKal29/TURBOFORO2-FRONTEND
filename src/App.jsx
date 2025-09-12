@@ -13,6 +13,7 @@ import Categoria from './routes/Categoria';
 import Perfil from './routes/Perfil';
 import EditProfile from './routes/EditProfile';
 import Avatares from './routes/Avatares';
+import ForgotPassword from './routes/ForgotPassword';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path='/profile' element={<Perfil></Perfil>}></Route>
         <Route path='/edit_profile' element={<EditProfile></EditProfile>}></Route>
         <Route path='/avatares' element={<Avatares></Avatares>}></Route>
+        <Route path='/forgot_password' element={<ForgotPassword></ForgotPassword>}></Route>
       </Routes>
 
       <Footer></Footer>

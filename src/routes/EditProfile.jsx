@@ -8,6 +8,8 @@ export default function EditProfile() {
   const {user,setUser} = useAppContext()  
   const navigate = useNavigate()
 
+  const [csrfToken,setCsrfToken] = useState('')
+
   const [form,setForm] = useState({
     email:user?.email || '',
     username:user?.username || '',
@@ -28,7 +30,7 @@ export default function EditProfile() {
       credentials:'include',
       method:'POST',
       body: JSON.stringify(form),
-      headers:{'Content-Type':'application/json'}
+      headers:{'Content-Type':'application/json','CSRF-Token':csrfToken}
     }).then(res=>res.json())
           .then(data=>{
             if (data.changed) {
@@ -41,7 +43,7 @@ export default function EditProfile() {
                 }
             }
           })
-          .catch(err=>{alert(err);})
+          .catch(err=>{alert('Error al enviar los datos');})
 
 
   }
@@ -61,6 +63,10 @@ export default function EditProfile() {
           setUser(data.user)
         }
       })
+
+    fetch('http://localhost:5000/csrf-token',{credentials:'include',method:'GET'})
+    .then(res=>res.json())
+    .then(data=>{setCsrfToken(data.csrfToken)})
 
 
   },[])

@@ -8,6 +8,8 @@ export default function Login() {
   const {user,setUser} = useAppContext()  
   const navigate = useNavigate()
 
+  const [csrfToken,setCsrfToken] = useState('')
+
   const [form,setForm] = useState({
       email:'',
       password:''
@@ -27,7 +29,7 @@ export default function Login() {
         credentials:'include',
         method:'POST',
         body: JSON.stringify(form),
-        headers:{'Content-Type':'application/json'}
+        headers:{'Content-Type':'application/json','CSRF-Token':csrfToken}
       }).then(res=>res.json())
       .then(data=>{
         if (data.user) {
@@ -41,12 +43,10 @@ export default function Login() {
           }
         }
       })
-      .catch(err=>{alert(err);})
+      .catch(err=>{alert('Error al enviar datos');})
   
   
     }
-  
-
   
 
   useEffect(()=>{
@@ -67,6 +67,11 @@ export default function Login() {
     })
 
 
+    fetch('http://localhost:5000/csrf-token',{credentials:'include',method:'GET'})
+    .then(res=>res.json())
+    .then(data=>{setCsrfToken(data.csrfToken)})
+
+
   },[])
 
   return (
@@ -75,6 +80,7 @@ export default function Login() {
         className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col gap-6"
         onSubmit={handleSubmit}
       >
+
         <h1 className="text-3xl font-extrabold text-center text-blue-800">
           Iniciar Sesión
         </h1>

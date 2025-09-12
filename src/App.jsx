@@ -14,6 +14,7 @@ import Perfil from './routes/Perfil';
 import EditProfile from './routes/EditProfile';
 import Avatares from './routes/Avatares';
 import ForgotPassword from './routes/ForgotPassword';
+import ChangePassword from './routes/ChangePassword';
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
         <Route path='/edit_profile' element={<EditProfile></EditProfile>}></Route>
         <Route path='/avatares' element={<Avatares></Avatares>}></Route>
         <Route path='/forgot_password' element={<ForgotPassword></ForgotPassword>}></Route>
+        <Route path='/change_password/:token' element={<ChangePassword></ChangePassword>}></Route>
       </Routes>
 
       <Footer></Footer>

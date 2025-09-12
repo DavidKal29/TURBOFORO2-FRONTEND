@@ -24,7 +24,6 @@ export default function Perfil() {
       .then(data => {
         if (!data.loggedIn) {
           console.log('El usuario no está logueado')
-          
           setUser(null)
           navigate('/login')
         } else {
@@ -51,7 +50,7 @@ export default function Perfil() {
 
             <div class="flex items-center gap-3 bg-green-50 p-4 rounded-xl shadow-md">
             <div class="w-6 h-6 flex items-center justify-center rounded-full bg-green-600">
-                <i class="fas fa-check text-white text-sm"></i>
+                {user?.rol === 'admin' ? (<><i class="fas fa-check text-white text-sm"></i></>) : (<><i class="fa-solid fa-x text-white text-sm"></i></>)}    
             </div>
             <span class="text-gray-800 font-medium">Usuario Admin</span>
             </div>
@@ -59,7 +58,7 @@ export default function Perfil() {
         
             <div class="flex items-center gap-3 bg-red-50 p-4 rounded-xl shadow-md">
             <div class="w-6 h-6 flex items-center justify-center rounded-full bg-red-600">
-                <i class="fas fa-check text-white text-sm"></i>
+                {user?.veterania >= 1 ? (<><i class="fas fa-check text-white text-sm"></i></>) : (<><i class="fa-solid fa-x text-white text-sm"></i></>)}    
             </div>
             <span class="text-gray-800 font-medium">Usuario Veterano</span>
             </div>

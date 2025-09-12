@@ -7,6 +7,15 @@ export default function Perfil() {
   const { user, setUser } = useAppContext()
   const navigate = useNavigate()
 
+  const verificarCorreo = ()=>{
+    fetch('http://localhost:5000/enviar_verificacion', {
+      method:'POST',
+      headers:{'Content-Type': 'application/json'},
+      body: JSON.stringify({email: user?.email || null}),
+      credentials:'include'
+    }).then(res=>res.json()).then(data=>{alert(data.message)}).catch(err=>{alert('Error al enviar el correo de verificación')})
+  }
+
   useEffect(() => {
     document.title = 'Perfil'
 
@@ -35,7 +44,7 @@ export default function Perfil() {
 
             <div class="flex items-center gap-3 bg-blue-50 p-4 rounded-xl shadow-md">
             <div class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-600">
-                <i class="fas fa-check text-white text-sm"></i>
+                {user?.verificado ? (<><i class="fas fa-check text-white text-sm"></i></>) : (<><i class="fa-solid fa-x text-white text-sm"></i></>)}    
             </div>
             <span class="text-gray-800 font-medium">Usuario Verificado</span>
             </div>
@@ -65,7 +74,7 @@ export default function Perfil() {
         <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
           <div className="relative">
                 <img
-                src={`/avatars/avatar${user?.avatar}.webp` || `/avatars/avatar20.webp`}
+                src={`/avatars/avatar${user?.avatar}.webp` || `/avatars/avatar16.webp`}
                 alt="avatar"
                 className="w-32 h-32 rounded-full border-4 border-gray-300 shadow-lg object-cover"
                 />
@@ -82,11 +91,17 @@ export default function Perfil() {
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
               {user?.username || 'Username'} 
             </h1>
-            <Link to="/edit_profile">
-                <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
-                    Editar Perfil
-                </button>
-            </Link>
+            
+            <div className='flex gap-2'>
+              <Link to="/edit_profile">
+                  <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+                      Editar Perfil
+                  </button>
+              </Link>
+
+              {!user?.verificado ? (<button onClick={verificarCorreo} className="bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">Verificar Correo</button>) : (<></>)}
+            </div>
+          
           </div>
         </div>
 

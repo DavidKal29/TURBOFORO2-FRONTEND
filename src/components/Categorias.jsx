@@ -1,10 +1,33 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 
 export default function Categorias() {
-  const {categorias} = useAppContext()
 
+  const {categorias,setCategorias} = useAppContext()
+
+  
+
+
+       
+
+    useEffect(()=>{
+      const obtenerCategorias = async()=>{
+        try {
+          const res = await fetch('http://localhost:5000/categorias',{method:'GET',credentials:'include'})
+
+          const data = await res.json()
+
+          setCategorias(data.categorias)
+          
+        } catch (error) {
+          console.log('Error:',error);
+        }
+      }
+
+      obtenerCategorias()
+
+    },[])
   
 
   return (
@@ -14,21 +37,28 @@ export default function Categorias() {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
-        {categorias.map((cat, index) => (
-          <Link to={`/categoria/${cat.nombre}`}
-            key={index}
-            className={`flex items-center gap-3 p-4 bg-white rounded-xl shadow hover:shadow-xl transition-all duration-300 cursor-pointer border-l-4 border-${cat.color}`}
-          >
-            <i
-              className={`fa-solid ${cat.icono} text-${cat.color} text-2xl`}
-            ></i>
-            <span
-              className={`font-semibold text-lg md:text-xl`}
+
+        {categorias.length === 0 ? (
+          <p className="text-center text-gray-500 py-4">Las putas categorias: {categorias[0]}</p>
+        ) : (
+          categorias.map((cat,index) => (
+            <Link to={`/categoria/${cat.nombre}`}
+              key={index}
+              className={`flex items-center gap-3 p-4 bg-white rounded-xl shadow hover:shadow-xl transition-all duration-300 cursor-pointer border-l-4 border-${cat.color}`}
             >
-              {cat.nombre}
-            </span>
-          </Link>
-        ))}
+              <i
+                className={`fa-solid ${cat.icono} text-${cat.color} text-2xl`}
+              ></i>
+              <span
+                className={`font-semibold text-lg md:text-xl`}
+              >
+                {cat.nombre}
+              </span>
+            </Link>
+          ))
+        )}
+
+        
       </div>
     </div>
   );

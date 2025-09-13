@@ -2,11 +2,13 @@ import React, { useEffect } from 'react'
 import Categorias from '../components/Categorias'
 import Populares from '../components/Populares'
 import { Link } from 'react-router-dom'
+import { useAppContext } from '../context/AppContext'
 
 export default function Home() {
 
   useEffect(() => {
     document.title = 'Inicio'
+
   }, [])
 
   return (

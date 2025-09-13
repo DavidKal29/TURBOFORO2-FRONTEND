@@ -8,7 +8,7 @@ export default function Categorias() {
   
 
   return (
-    <div className="bg-gray-50 rounded-xl shadow-lg p-6 mt-12 mb-12 w-full">
+    <div className="bg-gray-50 rounded-xl shadow-lg p-6 mb-12 w-full">
       <h1 className="font-extrabold text-4xl md:text-5xl text-center mb-6 text-gray-800">
         Categorías
       </h1>

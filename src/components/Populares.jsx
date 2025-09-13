@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Populares() {
   return (
-      <div className='bg-gray-50 rounded-2xl shadow-2xl p-6 mt-12 mb-12 w-full md:overflow-y-auto md:h-[40%]'>
+      <div className='bg-gray-50 rounded-2xl shadow-2xl p-6 mb-12 w-full md:overflow-y-auto md:h-[40%]'>
         <h1 className='font-extrabold text-3xl md:text-4xl text-left mb-4 text-gray-800'>Populares</h1>
         <h2 className='text-left mb-6 text-gray-600 border-b-[2px] border-gray-300 pb-2'>Los hilos más recientes</h2>
 

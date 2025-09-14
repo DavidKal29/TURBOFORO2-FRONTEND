@@ -10,12 +10,12 @@ export default function CrearHilo() {
 
   const [csrfToken,setCsrfToken] = useState('')
 
-  const {categorias} = useAppContext()
+  const {categorias,setCategorias} = useAppContext()
 
   const [form,setForm] = useState({
-    email:user?.email || '',
-    username:user?.username || '',
-    description:user?.description || ''
+    titulo:'',
+    mensaje:'',
+    categoria:'1'
   })
 
   const handleChange =(e)=>{
@@ -28,22 +28,19 @@ export default function CrearHilo() {
   const handleSubmit =(e)=>{
     e.preventDefault()
 
-    fetch('http://localhost:5000/editar_perfil',{
+    fetch('http://localhost:5000/crearHilo',{
       credentials:'include',
       method:'POST',
       body: JSON.stringify(form),
       headers:{'Content-Type':'application/json','CSRF-Token':csrfToken}
     }).then(res=>res.json())
           .then(data=>{
-            if (data.changed) {
-              navigate('/profile')
+            if (data.error) {
+                alert(data.error.msg)
             }else{
-                if (data.error) {
-                    alert(data.error.msg)
-                }else{
-                    alert(data.message)
-                }
+                alert(data.message)
             }
+                
           })
           .catch(err=>{alert('Error al enviar los datos');})
 
@@ -51,7 +48,7 @@ export default function CrearHilo() {
   }
 
   useEffect(()=>{
-    document.title = 'Edit Profile'
+    document.title = 'Create Thread'
 
     fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
       .then(res => res.json())
@@ -69,6 +66,21 @@ export default function CrearHilo() {
     fetch('http://localhost:5000/csrf-token',{credentials:'include',method:'GET'})
     .then(res=>res.json())
     .then(data=>{setCsrfToken(data.csrfToken)})
+
+    const obtenerCategorias = async()=>{
+        try {
+          const res = await fetch('http://localhost:5000/categorias',{method:'GET',credentials:'include'})
+
+          const data = await res.json()
+
+          setCategorias(data.categorias)
+          
+        } catch (error) {
+          console.log('Error:',error);
+        }
+      }
+
+    obtenerCategorias()
 
 
   },[])
@@ -91,6 +103,8 @@ export default function CrearHilo() {
           <input
             type="text"
             name="titulo"
+            value={form.titulo}
+            onChange={handleChange}
             placeholder="Ponle título a tu hilo"
             className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
@@ -103,30 +117,27 @@ export default function CrearHilo() {
           </label>
 
           <select 
-            type="text"
-            name="titulo"
+            name="categoria"
+            value={form.categoria}
+            onChange={handleChange}
             className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
             
             {categorias.map((categoria,index)=>(
                 <option key={index} value={categoria.id}>{categoria.nombre}</option>
             ))}
-
-            
-
           </select>
-
         </div>
 
         
 
-        {/* Contenido */}
+        {/* Mensaje */}
         <div className="flex flex-col">
           <label htmlFor="contenido" className="text-sm font-semibold text-gray-600">
-            Contenido
+            Mensaje
           </label>
           <textarea
             type="text"
-            name="contenido"
+            name="mensaje"
             onChange={handleChange}
             placeholder="Escribe aquí tu mensaje"
             className="resize-none mt-1 px-4 py-2 h-[10rem] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

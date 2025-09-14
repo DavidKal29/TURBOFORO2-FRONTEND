@@ -4,55 +4,68 @@ import { useAppContext } from "../context/AppContext";
 
 export default function Categoria() {
   const { categoria } = useParams();
-  const {categorias} = useAppContext()
-  const navigate = useNavigate()
+  const { categorias } = useAppContext();
+  const navigate = useNavigate();
 
-  const encontrado = categorias.find(c=>c.nombre===categoria) || 'Categoria inexistente'
-  console.log(encontrado);
-  
+  const encontrado = categorias.find((c) => c.nombre === categoria);
 
-  const comprobarCategoria = ()=>{
-    const encontrado = categorias.find(c=>c.nombre===categoria)
-
+  const comprobarCategoria = () => {
     if (!encontrado) {
-        navigate('/')
+      navigate("/");
     }
-  }
+  };
 
-  useEffect(()=>{
-    comprobarCategoria()
-
-    window.scrollTo({top:'0',behavior:'smooth'})
-
-    document.title = `${categoria}`
-  },[])
+  useEffect(() => {
+    comprobarCategoria();
+    window.scrollTo({ top: "0", behavior: "smooth" });
+    document.title = `${categoria}`;
+  }, []);
 
   // Generamos 40 hilos ficticios
-  const hilos = Array.from({ length: 40 })
-  return (
-    <div className="max-w-5xl scroll-mt-28 mx-auto mt-[150px] mb-16 px-4">
-      
-      <h1 className="font-extrabold text-3xl md:text-5xl text-gray-800 text-center mb-10">
-        <i className={`fa-solid ${encontrado.icono} text-${encontrado.color}`}></i> {encontrado.nombre}
-      </h1>
+  const hilos = Array.from({ length: 40 });
 
-      <div className="grid grid-cols-1 gap-4">
-        {hilos.map((hilo,index) => (
+  if (!encontrado) return null;
+
+  return (
+    <div className="min-h-screen bg-gray-100 mt-[80px]">
+      {/* HERO */}
+      <div className={`relative bg-gradient-to-r from-${encontrado.color} to-purple-600 py-20 text-center text-white`}>
+        <i className={`fa-solid ${encontrado.icono} text-6xl drop-shadow-lg`}></i>
+        <h1 className="mt-6 font-extrabold text-5xl md:text-7xl drop-shadow-lg">
+          {encontrado.nombre}
+        </h1>
+        <p className="mt-4 text-lg opacity-90">
+          Bienvenido a la categoría de <span className="font-semibold">{encontrado.nombre}</span>, explora y participa 🚀
+        </p>
+      </div>
+
+      {/* GRID DE HILOS */}
+      <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {hilos.map((hilo, index) => (
           <div
             key={index}
-            className={`flex justify-between items-center p-4 bg-white rounded-xl shadow hover:shadow-lg transition-all duration-300 cursor-pointer border-l-4 border-${encontrado.color}`}
+            className="relative bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 p-6 cursor-pointer group overflow-hidden border border-gray-200"
           >
-            <div>
-              <h2 className="font-semibold text-lg text-gray-800">
-                Titulo
-              </h2>
-              <p className="text-sm text-gray-500">@Autor</p>
-            </div>
 
-            {/* Mensajes */}
-            <div className="flex items-center gap-2 text-gray-600">
-              <i className={`fa-solid fa-comment text-${encontrado.color}`}></i>
-              <span className="font-medium">891</span>
+            <div className="flex flex-col h-full justify-between">
+              <div>
+                <h2 className="font-bold text-2xl text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
+                  Título del Hilo
+                </h2>
+                <p className="mt-2 text-gray-500 text-sm">@Autor</p>
+              </div>
+
+              <div className="mt-6 flex items-center justify-between text-gray-600">
+                <div className="flex items-center gap-2">
+                  <i className={`fa-solid fa-comment text-${encontrado.color}`}></i>
+                  <span className="font-medium">234</span>
+                </div>
+                <button
+                  className={`bg-${encontrado.color} text-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition-transform`}
+                >
+                  Ver hilo
+                </button>
+              </div>
             </div>
           </div>
         ))}
@@ -60,4 +73,3 @@ export default function Categoria() {
     </div>
   );
 }
-

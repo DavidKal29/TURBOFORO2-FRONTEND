@@ -23,6 +23,8 @@ export default function Categorias() {
         } catch (error) {
           console.log('Error:',error);
         }
+        
+
       }
 
       obtenerCategorias()

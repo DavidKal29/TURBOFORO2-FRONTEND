@@ -5,10 +5,6 @@ import { useAppContext } from "../context/AppContext";
 export default function Categorias() {
 
   const {categorias,setCategorias} = useAppContext()
-
-  
-
-
        
 
     useEffect(()=>{
@@ -23,7 +19,6 @@ export default function Categorias() {
         } catch (error) {
           console.log('Error:',error);
         }
-        
 
       }
 
@@ -44,7 +39,7 @@ export default function Categorias() {
           <p className="text-center text-gray-500 py-4">Las putas categorias: {categorias[0]}</p>
         ) : (
           categorias.map((cat,index) => (
-            <Link to={`/categoria/${cat.nombre}`}
+            <Link to={`/categoria/${cat.nombre}/page/1`}
               key={index}
               className={`flex items-center gap-3 p-4 bg-white rounded-xl shadow hover:shadow-xl transition-all duration-300 cursor-pointer border-l-4 border-${cat.color}`}
             >

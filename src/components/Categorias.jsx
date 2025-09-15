@@ -36,7 +36,7 @@ export default function Categorias() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
 
         {categorias.length === 0 ? (
-          <p className="text-center text-gray-500 py-4">Las putas categorias: {categorias[0]}</p>
+          <p className="text-center text-gray-500 py-4">Las categorias: {categorias[0]}</p>
         ) : (
           categorias.map((cat,index) => (
             <Link to={`/categoria/${cat.nombre}/page/1`}

@@ -16,6 +16,7 @@ import Avatares from './routes/Avatares';
 import ForgotPassword from './routes/ForgotPassword';
 import ChangePassword from './routes/ChangePassword';
 import CrearHilo from './routes/CrearHilo';
+import Page404 from './routes/Page404';
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path='/forgot_password' element={<ForgotPassword></ForgotPassword>}></Route>
         <Route path='/change_password/:token' element={<ChangePassword></ChangePassword>}></Route>
         <Route path='/crear_hilo' element={<CrearHilo></CrearHilo>}></Route>
+        <Route path='*' element={<Page404></Page404>}></Route>
       </Routes>
 
       <Footer></Footer>

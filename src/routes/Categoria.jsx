@@ -106,11 +106,11 @@ export default function Categoria() {
                   <i className={`fa-solid fa-comment text-${encontrado.color}`}></i>
                   <span className="font-medium">{hilo.mensajes}</span>
                 </div>
-                <button
+                <a href={`/display_thread/${hilo.id}`}
                   className={`bg-${encontrado.color} text-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition-transform`}
                 >
                   Ver hilo
-                </button>
+                </a>
               </div>
             </div>
           </div>

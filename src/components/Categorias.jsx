@@ -14,7 +14,11 @@ export default function Categorias() {
 
           const data = await res.json()
 
-          setCategorias(data.categorias)
+          if (data.categorias) {
+            setCategorias(data.categorias)
+          }else{
+            setCategorias([])
+          }
           
         } catch (error) {
           console.log('Error:',error);

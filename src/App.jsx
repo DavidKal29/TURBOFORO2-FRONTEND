@@ -37,7 +37,7 @@ function App() {
         <Route path='/forgot_password' element={<ForgotPassword></ForgotPassword>}></Route>
         <Route path='/change_password/:token' element={<ChangePassword></ChangePassword>}></Route>
         <Route path='/crear_hilo' element={<CrearHilo></CrearHilo>}></Route>
-        <Route path='/display_thread/:id_hilo' element={<MostrarHilo></MostrarHilo>}></Route>
+        <Route path='/display_thread/:id_hilo/page/:page' element={<MostrarHilo></MostrarHilo>}></Route>
         <Route path='*' element={<Page404></Page404>}></Route>
       </Routes>
 

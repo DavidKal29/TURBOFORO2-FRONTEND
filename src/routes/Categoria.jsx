@@ -16,7 +16,12 @@ export default function Categoria() {
       try {
         const res = await fetch('http://localhost:5000/categorias', { method: 'GET', credentials: 'include' });
         const data = await res.json();
-        setCategorias(data.categorias);
+        if (data.categorias) {
+          setCategorias(data.categorias);
+        }else{
+          navigate('/')
+        }
+        
       } catch (error) {
         navigate('/')
       }
@@ -42,27 +47,19 @@ export default function Categoria() {
       try {
         const res = await fetch(`http://localhost:5000/hilos/${encontrado.id}/${page}`, { method: 'GET', credentials: 'include' });
         const data = await res.json();
-        setHilos(data.hilos);
+        if (data.hilos) {
+          setHilos(data.hilos)
+        }else{
+          navigate('/*')
+        }
       } catch (error) {
         navigate('/')
       }
     };
 
     obtenerHilos();
-
-    if (page===0) {
-      navigate(`/categoria/${categoria}/page/1`)
-    }
-
-    if (page>Math.ceil(encontrado.counter/39)) {
-      navigate(`/categoria/${categoria}/page/${Math.ceil(encontrado.counter/39)}`)
-    }
-
-    if (!page) {
-      navigate('/')
-    }
     
-  }, [encontrado, page]);
+  }, [encontrado]);
 
   
 
@@ -106,7 +103,7 @@ export default function Categoria() {
                   <i className={`fa-solid fa-comment text-${encontrado.color}`}></i>
                   <span className="font-medium">{hilo.mensajes}</span>
                 </div>
-                <a href={`/display_thread/${hilo.id}`}
+                <a href={`/display_thread/${hilo.id}/page/1`}
                   className={`bg-${encontrado.color} text-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition-transform`}
                 >
                   Ver hilo

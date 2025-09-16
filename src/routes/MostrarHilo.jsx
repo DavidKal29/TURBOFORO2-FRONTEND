@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams,Link } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
 
 export default function MostrarHilo() {
   const [mensajes, setMensajes] = useState([])
   const [hilo, setHilo] = useState({})
-  const { id_hilo } = useParams()
+  const { id_hilo, page } = useParams()
   const { user, setUser } = useAppContext()
   const navigate = useNavigate()
 
@@ -14,7 +14,7 @@ export default function MostrarHilo() {
   const [csrfToken, setCsrfToken] = useState('')
 
   const obtenerMensajes = () => {
-    fetch(`http://localhost:5000/hilo/${id_hilo}`, { method: 'GET', credentials: 'include' })
+    fetch(`http://localhost:5000/hilo/${id_hilo}/${page}`, { method: 'GET', credentials: 'include' })
       .then(res => res.json())
       .then(data => {
         if (data) {
@@ -73,9 +73,11 @@ export default function MostrarHilo() {
     fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
+
+    
   }, [])
 
-  // Cambiar título del documento cuando el hilo esté cargado
+
   useEffect(() => {
     if (hilo.titulo) {
       document.title = hilo.titulo
@@ -150,6 +152,15 @@ export default function MostrarHilo() {
               </div>
             )
           })}
+        </div>
+
+        <div class="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap pb-6">
+          {Array.from({length:Math.ceil(hilo.mensajes/39)},(_,i)=>i+1).map((p,index)=>(
+              <Link to={`/display_thread/${id_hilo}/page/${index+1}`}  key={index} className={`${Number(page)===p ? ('bg-indigo-900') : ('bg-blue-500')} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`} >
+                {p}
+              </Link>
+          ))}
+          
         </div>
 
         {respuesta && (

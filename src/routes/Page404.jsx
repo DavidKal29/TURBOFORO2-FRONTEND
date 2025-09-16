@@ -8,8 +8,8 @@ export default function Page404() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6">
-      <h1 className="text-[120px] font-extrabold drop-shadow-lg">404</h1>
-      <h2 className="text-3xl md:text-4xl font-bold mb-4">
+      <h1 className="text-[120px] font-extrabold drop-shadow-lg text-center">404</h1>
+      <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
         ¡Ups! Página no encontrada
       </h2>
       <p className="text-lg text-blue-100 max-w-lg text-center mb-8">

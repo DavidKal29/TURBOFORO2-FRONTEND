@@ -131,7 +131,10 @@ export default function MostrarHilo() {
                   </div>
                 )}
 
-                <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed w-full">{msg.contenido}</p>
+                <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed w-full break-words whitespace-pre-wrap">
+                  {msg.contenido}
+                </p>
+
 
                 {user && (
                   <div className="flex justify-end mt-2">

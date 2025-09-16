@@ -75,6 +75,13 @@ export default function MostrarHilo() {
       .then(data => setCsrfToken(data.csrfToken))
   }, [])
 
+  // Cambiar título del documento cuando el hilo esté cargado
+  useEffect(() => {
+    if (hilo.titulo) {
+      document.title = hilo.titulo
+    }
+  }, [hilo.titulo])
+
   return (
     <div className="flex justify-center px-4 py-10 mt-[80px] min-h-screen bg-gradient-to-r from-gray-200 to-indigo-500">
       <div className="w-full max-w-5xl pb-32">
@@ -126,15 +133,17 @@ export default function MostrarHilo() {
 
                 <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed w-full">{msg.contenido}</p>
 
-                <div className="flex justify-end mt-2">
-                  <button
-                    onClick={() => responder(msg)}
-                    className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
-                  >
-                    <i className="fa-solid fa-reply"></i>
-                    Responder
-                  </button>
-                </div>
+                {user && (
+                  <div className="flex justify-end mt-2">
+                    <button
+                      onClick={() => responder(msg)}
+                      className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
+                    >
+                      <i className="fa-solid fa-reply"></i>
+                      Responder
+                    </button>
+                  </div>
+                )}
               </div>
             )
           })}

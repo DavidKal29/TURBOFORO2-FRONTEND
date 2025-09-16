@@ -98,7 +98,15 @@ export default function Perfil() {
                   </button>
               </Link>
 
+               
+
               {!user?.verificado ? (<button onClick={verificarCorreo} className="bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">Verificar Correo</button>) : (<></>)}
+
+              <Link to="/my_threads/page/1">
+                  <button className="bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+                      Mis Hilos
+                  </button>
+              </Link>
             </div>
           
           </div>

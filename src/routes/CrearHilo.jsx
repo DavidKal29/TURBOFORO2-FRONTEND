@@ -39,6 +39,9 @@ export default function CrearHilo() {
                 alert(data.error.msg)
             }else{
                 alert(data.message)
+                if (data.id_hilo) {
+                  navigate(`/display_thread/${data.id_hilo}`)
+                }
             }
                 
           })

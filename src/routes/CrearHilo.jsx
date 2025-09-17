@@ -12,6 +12,8 @@ export default function CrearHilo() {
 
   const {categorias,setCategorias} = useAppContext()
 
+  const [disabled,setDisabled] = useState(false)
+
   const [form,setForm] = useState({
     titulo:'',
     mensaje:'',
@@ -28,6 +30,9 @@ export default function CrearHilo() {
   const handleSubmit =(e)=>{
     e.preventDefault()
 
+    if (disabled) return 
+    setDisabled(true)
+
     fetch('http://localhost:5000/crearHilo',{
       credentials:'include',
       method:'POST',
@@ -36,7 +41,7 @@ export default function CrearHilo() {
     }).then(res=>res.json())
           .then(data=>{
             if (data.error) {
-                alert(data.error.msg)
+                alert(data.error)
             }else{
                 alert(data.message)
                 if (data.id_hilo) {
@@ -46,6 +51,11 @@ export default function CrearHilo() {
                 
           })
           .catch(err=>{alert('Error al enviar los datos');})
+          .finally(() => {
+          setTimeout(() => {
+            setDisabled(false)
+          }, 5000)
+        })
 
 
   }
@@ -151,7 +161,8 @@ export default function CrearHilo() {
         {/* Button */}
         <button
           type="submit"
-          className="cursor-pointer bg-gradient-to-r from-[#0d2c71] to-[#04ecb8] text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+          disabled={disabled}
+          className="cursor-pointer bg-gradient-to-r from-[#0d2c71] to-[#04ecb8] disabled:bg-green-900 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
         >
           Enviar
         </button>

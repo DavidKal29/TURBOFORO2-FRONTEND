@@ -25,6 +25,9 @@ export default function MisHilos() {
     };
 
   const borrarHilo = (id_hilo)=>{
+    const confirmar = window.confirm("¿Estás seguro de que quieres eliminar este hilo? Esta acción no se puede deshacer.")
+    if (!confirmar) return 
+
     fetch(`http://localhost:5000/delete/${id_hilo}`,{method:'GET',credentials:'include'})
     .then(res=>res.json())
     .then(data=>{

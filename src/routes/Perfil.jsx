@@ -16,6 +16,41 @@ export default function Perfil() {
     }).then(res=>res.json()).then(data=>{alert(data.message)}).catch(err=>{alert('Error al enviar el correo de verificación')})
   }
 
+  const logout = () =>{
+    fetch('http://localhost:5000/logout',{credentials:'include',method:'GET'})
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.loggedOut) {
+        console.log('El usuario ha cerrado sesión');
+        setUser(null)
+        navigate('/login')
+        
+      }else{
+        console.log('El usuario no está logueado');
+      }
+    })
+  }
+
+  const borrarCuenta = ()=>{
+
+    const confirm = window.confirm('¿Seguro que quieres borrar tu cuenta?')
+
+    if(!confirm) return
+
+    fetch('http://localhost:5000/borrar_cuenta', {
+      method:'GET',
+      credentials:'include'
+    }).then(res=>res.json())
+    .then(data=>{
+      if (data.deleted) {
+        logout()
+      }else{
+        alert(data.message)
+      }
+    })
+    .catch(err=>{alert('Error al enviar el correo de verificación')})
+  }
+
   useEffect(() => {
     document.title = 'Perfil'
 
@@ -91,22 +126,26 @@ export default function Perfil() {
               {user?.username || 'Username'} 
             </h1>
             
-            <div className='flex gap-2'>
+            <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
               <Link to="/edit_profile">
-                  <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+                  <button className="bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
                       Editar Perfil
                   </button>
               </Link>
-
-               
 
               {!user?.verificado ? (<button onClick={verificarCorreo} className="bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">Verificar Correo</button>) : (<></>)}
 
               <Link to="/my_threads/page/1">
                   <button className="bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
-                      Mis Hilos
+                      Ver mis Hilos
                   </button>
               </Link>
+
+              <button onClick={()=>{borrarCuenta()}} >
+                  <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+                      Borrar Cuenta
+                  </button>
+              </button>
             </div>
           
           </div>

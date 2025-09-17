@@ -8,6 +8,34 @@ export default function MisHilos() {
   const navigate = useNavigate();
   const page = Number(useParams().page)
 
+  const obtenerHilos = async () => {
+      try {
+        fetch(`http://localhost:5000/mis_hilos/${page}`, { method: 'GET', credentials: 'include' })
+        .then(res=>res.json())
+        .then(data=>{
+          if (data.hilos) {
+            setHilos(data.hilos)
+          }else{
+            navigate('/')
+          }
+        }).catch(error=>{setHilos([])})
+      } catch (error) {
+        navigate('/')
+      }
+    };
+
+  const borrarHilo = (id_hilo)=>{
+    fetch(`http://localhost:5000/delete/${id_hilo}`,{method:'GET',credentials:'include'})
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.deleted) {
+        obtenerHilos()
+      }else{
+        alert(data.message)
+      }
+    })
+  }
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     document.title = 'Mis hilos';
@@ -30,25 +58,12 @@ export default function MisHilos() {
         }
       })
 
-    const obtenerHilos = async () => {
-      try {
-        const res = await fetch(`http://localhost:5000/mis_hilos/${page}`, { method: 'GET', credentials: 'include' });
-        const data = await res.json();
-        if (data.hilos) {
-          setHilos(data.hilos)
-        }else{
-          navigate('/')
-        }
-      } catch (error) {
-        navigate('/')
-      }
-    };
-
+    
     obtenerHilos();
     
   }, []);
 
-  if (!user?.hilos) {
+  if (hilos.length===0) {
     return (
       <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6">
         <h1 className="text-[120px] font-extrabold drop-shadow-lg text-center">404</h1>
@@ -80,8 +95,8 @@ export default function MisHilos() {
           <h1 className="mt-6 font-extrabold text-5xl md:text-7xl drop-shadow-lg">
             Página:{page}
           </h1>
-          <p className="mt-4 text-lg opacity-90">
-            Bienvenido a tus hilos, aqui podrás ver y eliminar tus propios hilos
+          <p className="mt-4 text-lg opacity-90 text-center">
+            Aqui podrás ver y eliminar tus propios hilos
           </p>
         </div>
 
@@ -106,11 +121,21 @@ export default function MisHilos() {
                     <i className={`fa-solid fa-comment text-blue-500`}></i>
                     <span className="font-medium">{hilo.mensajes}</span>
                   </div>
-                  <a href={`/display_thread/${hilo.id}/page/1`}
+                  
+                  <div className="flex gap-2">
+                    <a href={`/display_thread/${hilo.id}/page/1`}
                     className={`bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition-transform`}
-                  >
-                    Ver hilo
-                  </a>
+                    >
+                      Ver hilo
+                    </a>
+
+                    <button onClick={()=>{borrarHilo(hilo.id)}}
+                    className={`cursor-pointer bg-red-500 text-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition-transform`}
+                    >
+                      Eliminar
+                    </button>
+                  </div>
+                  
                 </div>
               </div>
             </div>

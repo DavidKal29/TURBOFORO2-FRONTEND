@@ -54,7 +54,7 @@ export default function CrearHilo() {
           .finally(() => {
           setTimeout(() => {
             setDisabled(false)
-          }, 5000)
+          }, 15000)
         })
 
 

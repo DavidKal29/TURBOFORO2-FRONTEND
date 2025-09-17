@@ -74,7 +74,7 @@ export default function MostrarHilo() {
       .finally(() => {
         setTimeout(() => {
           setDisabled(false)
-        }, 5000)
+        }, 15000)
       })
   }
 

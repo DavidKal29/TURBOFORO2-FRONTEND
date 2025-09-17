@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams,Link } from 'react-router-dom'
+import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
 
 export default function MostrarHilo() {
@@ -10,10 +10,11 @@ export default function MostrarHilo() {
   const navigate = useNavigate()
 
   const [form, setForm] = useState({ mensaje: '' })
-  const [respuesta, setRespuesta] = useState(null) 
+  const [respuesta, setRespuesta] = useState(null)
   const [csrfToken, setCsrfToken] = useState('')
 
-  const [disabled,setDisabled] = useState(false)
+  const [disabled, setDisabled] = useState(false)
+  const [contador, setContador] = useState(0)
 
   const obtenerMensajes = () => {
     fetch(`http://localhost:5000/hilo/${id_hilo}/${page}`, { method: 'GET', credentials: 'include' })
@@ -41,10 +42,9 @@ export default function MostrarHilo() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    if (disabled) return 
+    if (disabled) return
     setDisabled(true)
-    
+
     const body = { ...form }
     if (respuesta) body.id_mensaje_respuesta = respuesta.id
 
@@ -58,12 +58,14 @@ export default function MostrarHilo() {
       .then(data => {
         if (data.error) {
           alert(data.error)
-          if (data.error==='Debes esperar 1 minuto para crear un hilo o mensaje') {
+          if (data.cooldown) {
             setForm({ mensaje: '' })
+            setContador(data.cooldown)
           }
         } else {
           setRespuesta(null)
           setForm({ mensaje: '' })
+          if (data.cooldown) setContador(data.cooldown)
           obtenerMensajes()
         }
       })
@@ -71,13 +73,24 @@ export default function MostrarHilo() {
         console.error(err)
         alert("Error al enviar el mensaje. Intenta de nuevo.")
       })
-      .finally(() => {
-        setTimeout(() => {
-          setDisabled(false)
-        }, 15000)
-      })
   }
 
+  useEffect(() => {
+    if (contador > 0) {
+      const interval = setInterval(() => {
+        setContador(prev => {
+          if (prev <= 1) {
+            clearInterval(interval)
+            setDisabled(false) 
+            return 0
+          }
+          return prev - 1
+        })
+      }, 1000)
+
+      return () => clearInterval(interval)
+    }
+  }, [contador])
 
   useEffect(() => {
     obtenerMensajes()
@@ -92,10 +105,7 @@ export default function MostrarHilo() {
     fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
-
-    
   }, [])
-
 
   useEffect(() => {
     if (hilo.titulo) {
@@ -123,7 +133,6 @@ export default function MostrarHilo() {
               ? mensajes.find(m => m.id === msg.id_mensaje_respuesta)
               : null
 
-            // Borde izquierdo azul si es autor del hilo
             const borderClass = msg.id_usuario === hilo.id_usuario ? 'border-l-4 border-blue-500' : ''
 
             return (
@@ -156,7 +165,6 @@ export default function MostrarHilo() {
                   {msg.contenido}
                 </p>
 
-
                 {user && (
                   <div className="flex justify-end mt-2">
                     <button
@@ -173,13 +181,12 @@ export default function MostrarHilo() {
           })}
         </div>
 
-        <div class="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap pb-6">
-          {Array.from({length:Math.ceil(hilo.mensajes/39)},(_,i)=>i+1).map((p,index)=>(
-              <Link to={`/display_thread/${id_hilo}/page/${index+1}`}  key={index} className={`${Number(page)===p ? ('bg-indigo-900') : ('bg-blue-500')} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`} >
-                {p}
-              </Link>
+        <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 flex-wrap pb-6">
+          {Array.from({ length: Math.ceil(hilo.mensajes / 39) }, (_, i) => i + 1).map((p, index) => (
+            <Link to={`/display_thread/${id_hilo}/page/${index + 1}`} key={index} className={`${Number(page) === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}>
+              {p}
+            </Link>
           ))}
-          
         </div>
 
         {respuesta && (
@@ -214,7 +221,7 @@ export default function MostrarHilo() {
               />
               <button disabled={disabled} className="px-6 py-3 bg-green-600 disabled:bg-green-900 text-white font-semibold rounded-xl shadow-md transition cursor-pointer">
                 <i className="fa-solid fa-paper-plane mr-2"></i>
-                Enviar
+                {disabled ? `Enviar (en ${contador}s)` : "Enviar"}
               </button>
             </form>
           </div>

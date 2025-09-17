@@ -93,6 +93,7 @@ export default function MostrarHilo() {
   }, [contador])
 
   useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     obtenerMensajes()
 
     fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
@@ -105,11 +106,13 @@ export default function MostrarHilo() {
     fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
-  }, [])
+  }, [page])
 
   useEffect(() => {
     if (hilo.titulo) {
       document.title = hilo.titulo
+
+      
     }
   }, [hilo.titulo])
 
@@ -121,17 +124,26 @@ export default function MostrarHilo() {
         <div className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 rounded-2xl shadow-2xl p-8 text-white mb-10">
           <h1 className="font-extrabold text-3xl md:text-5xl mb-4 break-words">{hilo.titulo}</h1>
           <p className="flex items-center text-lg font-medium opacity-90">
+            <i className="fa-solid fa-book mr-2"></i>
+            Página: {page}
+          </p>
+          <p className="flex items-center text-lg font-medium opacity-90">
             <i className="fa-solid fa-comments mr-2"></i>
             Mensajes enviados: {hilo.mensajes}
           </p>
         </div>
 
+        <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 flex-wrap pb-6">
+          {Array.from({ length: Math.ceil(hilo.mensajes / 39) }, (_, i) => i + 1).map((p, index) => (
+            <Link to={`/display_thread/${id_hilo}/page/${index + 1}`} key={index} className={`${Number(page) === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}>
+              {p}
+            </Link>
+          ))}
+        </div>
+
         {/* Lista de mensajes */}
         <div className="space-y-6">
           {mensajes.map((msg, index) => {
-            const mensajeOriginal = msg.id_mensaje_respuesta && msg.id_mensaje_respuesta !== 0
-              ? mensajes.find(m => m.id === msg.id_mensaje_respuesta)
-              : null
 
             const borderClass = msg.id_usuario === hilo.id_usuario ? 'border-l-4 border-blue-500' : ''
 
@@ -154,10 +166,10 @@ export default function MostrarHilo() {
                   </div>
                 </div>
 
-                {mensajeOriginal && (
+                {msg.id_mensaje_respuesta>0 && (
                   <div className="bg-gray-100 dark:bg-zinc-700/70 rounded p-3 max-h-32 overflow-auto border-l-4 border-blue-500">
-                    <p className="font-semibold text-sm dark:text-zinc-200">{mensajeOriginal.username}</p>
-                    <p className="text-sm break-words dark:text-zinc-200">{mensajeOriginal.contenido}</p>
+                    <p className="font-semibold text-sm dark:text-zinc-200">{msg.contenido_mensaje_respuesta}</p>
+                    <p className="text-sm break-words dark:text-zinc-200">{msg.username_mensaje_respuesta}</p>
                   </div>
                 )}
 

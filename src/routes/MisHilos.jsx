@@ -16,11 +16,11 @@ export default function MisHilos() {
           if (data.hilos) {
             setHilos(data.hilos)
           }else{
-            navigate('/')
+            navigate('/profile')
           }
         }).catch(error=>{setHilos([])})
       } catch (error) {
-        navigate('/')
+        navigate('/profile')
       }
     };
 
@@ -116,7 +116,7 @@ export default function MisHilos() {
                   <h2 className="font-bold text-2xl text-gray-800 group-hover:text-purple-600 transition-colors duration-300">
                     {hilo.titulo}
                   </h2>
-                  <p className="mt-2 text-gray-500 text-sm">@{hilo.id_usuario} | {hilo.fecha}</p>
+                  <p className="mt-2 text-gray-500 text-sm">@{hilo.username} | {hilo.fecha}</p>
                 </div>
 
                 <div className="mt-6 flex items-center justify-between text-gray-600">

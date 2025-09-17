@@ -156,8 +156,8 @@ export default function MostrarHilo() {
 
                 {mensajeOriginal && (
                   <div className="bg-gray-100 dark:bg-zinc-700/70 rounded p-3 max-h-32 overflow-auto border-l-4 border-blue-500">
-                    <p className="font-semibold text-sm">{mensajeOriginal.username}</p>
-                    <p className="text-sm break-words">{mensajeOriginal.contenido}</p>
+                    <p className="font-semibold text-sm dark:text-zinc-200">{mensajeOriginal.username}</p>
+                    <p className="text-sm break-words dark:text-zinc-200">{mensajeOriginal.contenido}</p>
                   </div>
                 )}
 

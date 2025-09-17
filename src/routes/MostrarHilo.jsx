@@ -13,6 +13,8 @@ export default function MostrarHilo() {
   const [respuesta, setRespuesta] = useState(null) 
   const [csrfToken, setCsrfToken] = useState('')
 
+  const [disabled,setDisabled] = useState(false)
+
   const obtenerMensajes = () => {
     fetch(`http://localhost:5000/hilo/${id_hilo}/${page}`, { method: 'GET', credentials: 'include' })
       .then(res => res.json())
@@ -39,6 +41,10 @@ export default function MostrarHilo() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
+
+    if (disabled) return 
+    setDisabled(true)
+    
     const body = { ...form }
     if (respuesta) body.id_mensaje_respuesta = respuesta.id
 
@@ -50,15 +56,28 @@ export default function MostrarHilo() {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.error) alert(data.error)
-        else {
+        if (data.error) {
+          alert(data.error)
+          if (data.error==='Debes esperar 1 minuto para crear un hilo o mensaje') {
+            setForm({ mensaje: '' })
+          }
+        } else {
           setRespuesta(null)
           setForm({ mensaje: '' })
           obtenerMensajes()
         }
       })
-      .catch(err => alert(err))
+      .catch(err => {
+        console.error(err)
+        alert("Error al enviar el mensaje. Intenta de nuevo.")
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setDisabled(false)
+        }, 5000)
+      })
   }
+
 
   useEffect(() => {
     obtenerMensajes()
@@ -188,11 +207,12 @@ export default function MostrarHilo() {
                 name="mensaje"
                 placeholder="Escribe tu mensaje..."
                 required
+                disabled={disabled}
                 value={form.mensaje}
                 onChange={handleChange}
                 className="flex-1 px-4 py-3 rounded-xl bg-white/90 text-zinc-800 focus:outline-none focus:ring-2 focus:ring-pink-400"
               />
-              <button className="px-6 py-3 bg-green-600 text-white font-semibold rounded-xl shadow-md transition cursor-pointer">
+              <button disabled={disabled} className="px-6 py-3 bg-green-600 disabled:bg-green-900 text-white font-semibold rounded-xl shadow-md transition cursor-pointer">
                 <i className="fa-solid fa-paper-plane mr-2"></i>
                 Enviar
               </button>

@@ -36,6 +36,23 @@ export default function MostrarHilo() {
       .catch(err => alert(err))
   }
 
+  const borrarMensaje = (id_mensaje) =>{
+    const confirm = window.confirm('¿Seguro que quieres borrar este mensaje?')
+
+    if (!confirm) return;
+
+    fetch(`http://localhost:5000/delete_message/${id_mensaje}`,{method:'GET',credentials:'include'})
+    .then(res=>res.json())
+    .then(data=>{
+      if (data.deleted) {
+        alert('Mensaje borrado con éxito')
+        obtenerMensajes()
+      }else{
+        alert(data.message)
+      }
+    })
+  }
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
@@ -176,10 +193,21 @@ export default function MostrarHilo() {
                       alt="avatar"
                     />
                     <div className="flex flex-col md:flex-row md:items-center w-full">
-                      <p className="font-semibold text-lg text-zinc-800 dark:text-zinc-200 break-words">{msg.username}</p>
+                      <p className="font-semibold text-zinc-800 dark:text-zinc-200 break-words">{msg.username_mensaje}</p>
                       <span className="text-sm text-zinc-500 dark:text-zinc-400 md:ml-auto">{msg.fecha} #{(Number(page)-1)*39+(index+1)}</span>
                     </div>
                   </div>
+
+                  {user && user.id === msg.id_usuario && (
+                    <div className="flex gap-2 ml-4">
+                      <button className="p-1 cursor-pointer rounded-lg bg-green-500 text-white shadow-md">
+                        <i className="fa-solid fa-pen"></i>
+                      </button>
+                      <button onClick={()=>{borrarMensaje(msg.id)}} className="p-1 cursor-pointer rounded-lg bg-red-600 text-white shadow-md">
+                        <i className="fa-solid fa-trash"></i> 
+                      </button>
+                    </div>
+                  )}
                 </div>
 
                 {msg.id_mensaje_respuesta>0 && (

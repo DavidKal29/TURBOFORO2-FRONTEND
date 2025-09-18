@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
+import { useLocation } from 'react-router-dom'
+
+
 
 export default function MostrarHilo() {
+  const location = useLocation()
   const [mensajes, setMensajes] = useState([])
   const [hilo, setHilo] = useState({})
   const { id_hilo, page } = useParams()
@@ -74,6 +78,17 @@ export default function MostrarHilo() {
         alert("Error al enviar el mensaje. Intenta de nuevo.")
       })
   }
+
+  useEffect(() => {
+  if (location.hash) {
+    const elementId = location.hash.replace("#", "")
+    const el = document.getElementById(elementId)
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" })
+    }
+  }
+}, [location, mensajes])
+
 
   useEffect(() => {
     if (contador > 0) {
@@ -150,7 +165,8 @@ export default function MostrarHilo() {
             return (
               <div
                 key={index}
-                className={`bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 flex flex-col gap-4 transition hover:shadow-2xl ${borderClass}`}
+                id={`post${msg.id}`}
+                className={`scroll-mt-24 bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 flex flex-col gap-4 transition hover:shadow-2xl ${borderClass}`}
               >
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-4 flex-1">
@@ -161,15 +177,20 @@ export default function MostrarHilo() {
                     />
                     <div className="flex flex-col md:flex-row md:items-center w-full">
                       <p className="font-semibold text-lg text-zinc-800 dark:text-zinc-200 break-words">{msg.username}</p>
-                      <span className="text-sm text-zinc-500 dark:text-zinc-400 md:ml-auto">{msg.fecha}</span>
+                      <span className="text-sm text-zinc-500 dark:text-zinc-400 md:ml-auto">{msg.fecha} #{(Number(page)-1)*39+(index+1)}</span>
                     </div>
                   </div>
                 </div>
 
                 {msg.id_mensaje_respuesta>0 && (
                   <div className="bg-gray-100 dark:bg-zinc-700/70 rounded p-3 max-h-32 overflow-auto border-l-4 border-blue-500">
-                    <p className="font-semibold text-sm dark:text-zinc-200">{msg.contenido_mensaje_respuesta}</p>
-                    <p className="text-sm break-words dark:text-zinc-200">{msg.username_mensaje_respuesta}</p>
+                    <p className="font-semibold text-sm dark:text-zinc-200">
+                      {msg.username_mensaje_respuesta} 
+
+                      <a href={`${window.location.origin}/display_thread/${id_hilo}/page/${msg.page_mensaje_respuesta}#post${msg.id_mensaje_respuesta}`}><i class="fa-solid fa-share"></i></a>
+                    
+                    </p>
+                    <p className="text-sm break-words dark:text-zinc-200">{msg.contenido_mensaje_respuesta}</p>
                   </div>
                 )}
 
@@ -178,7 +199,7 @@ export default function MostrarHilo() {
                 </p>
 
                 {user && (
-                  <div className="flex justify-end mt-2">
+                  <div className="flex justify-end mt-2 gap-2">
                     <button
                       onClick={() => responder(msg)}
                       className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
@@ -186,8 +207,22 @@ export default function MostrarHilo() {
                       <i className="fa-solid fa-reply"></i>
                       Responder
                     </button>
+
+                    <button
+                      onClick={() => {
+                        const enlace = `${window.location.origin}/display_thread/${id_hilo}/page/${page}#post${msg.id}`
+                        navigator.clipboard.writeText(enlace)
+                          .then(() => alert("Enlace copiado: " + enlace))
+                          .catch(err => console.error("Error al copiar enlace:", err))
+                      }}
+                      className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition flex items-center gap-2 cursor-pointer"
+                    >
+                      <i className="fa-solid fa-link"></i>
+                      Copiar enlace
+                    </button>
                   </div>
                 )}
+
               </div>
             )
           })}

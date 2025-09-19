@@ -193,16 +193,13 @@ export default function MostrarHilo() {
                       alt="avatar"
                     />
                     <div className="flex flex-col md:flex-row md:items-center w-full">
-                      <p className="font-semibold text-zinc-800 dark:text-zinc-200 break-words">{msg.username_mensaje}</p>
+                      <a href={user?.id && user?.id === msg?.id_usuario ? '/profile' : `/usuario/${msg.id_usuario}`} target='_blank' className="font-semibold text-zinc-800 dark:text-zinc-200 break-words">{msg.username_mensaje}</a>
                       <span className="text-sm text-zinc-500 dark:text-zinc-400 md:ml-auto">{msg.fecha} #{(Number(page)-1)*39+(index+1)}</span>
                     </div>
                   </div>
 
                   {user && user.id === msg.id_usuario && (
                     <div className="flex gap-2 ml-4">
-                      <button className="p-1 cursor-pointer rounded-lg bg-green-500 text-white shadow-md">
-                        <i className="fa-solid fa-pen"></i>
-                      </button>
                       <button onClick={()=>{borrarMensaje(msg.id)}} className="p-1 cursor-pointer rounded-lg bg-red-600 text-white shadow-md">
                         <i className="fa-solid fa-trash"></i> 
                       </button>
@@ -226,8 +223,8 @@ export default function MostrarHilo() {
                   {msg.contenido}
                 </p>
 
-                {user && (
-                  <div className="flex justify-end mt-2 gap-2">
+                <div className="flex justify-end mt-2 gap-2">
+                  {user && (
                     <button
                       onClick={() => responder(msg)}
                       className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition flex items-center gap-2 cursor-pointer"
@@ -235,21 +232,22 @@ export default function MostrarHilo() {
                       <i className="fa-solid fa-reply"></i>
                       Responder
                     </button>
+                  )}
 
-                    <button
-                      onClick={() => {
-                        const enlace = `${window.location.origin}/display_thread/${id_hilo}/page/${page}#post${msg.id}`
-                        navigator.clipboard.writeText(enlace)
-                          .then(() => alert("Enlace copiado: " + enlace))
-                          .catch(err => console.error("Error al copiar enlace:", err))
-                      }}
-                      className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition flex items-center gap-2 cursor-pointer"
-                    >
-                      <i className="fa-solid fa-link"></i>
-                      Copiar enlace
-                    </button>
-                  </div>
-                )}
+                  <button
+                    onClick={() => {
+                      const enlace = `${window.location.origin}/display_thread/${id_hilo}/page/${page}#post${msg.id}`
+                      navigator.clipboard.writeText(enlace)
+                        .then(() => alert("Enlace copiado: " + enlace))
+                        .catch(err => console.error("Error al copiar enlace:", err))
+                    }}
+                    className="px-4 py-2 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition flex items-center gap-2 cursor-pointer"
+                  >
+                    <i className="fa-solid fa-link"></i>
+                    Copiar enlace
+                  </button>
+                </div>
+
 
               </div>
             )

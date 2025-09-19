@@ -45,7 +45,7 @@ export default function Perfil() {
       if (data.deleted) {
         logout()
       }else{
-        alert(data.message)
+        alert('Error al intentar borrar usuario, intentalo más tarde')
       }
     })
     .catch(err=>{alert('Error al enviar el correo de verificación')})
@@ -66,7 +66,12 @@ export default function Perfil() {
           setUser(data.user)
         }
       })
-  }, [])
+
+
+      
+    }, [])
+
+    
 
   return (
     <div className="mt-[80px] flex justify-center items-center flex-col gap-8 px-4 sm:px-6 py-10 bg-gray-50">

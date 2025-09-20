@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
+import { toast } from 'sonner' //Para mostrar notificaciones
 
 
 export default function ChangePassword() {
@@ -36,12 +37,17 @@ export default function ChangePassword() {
       }).then(res=>res.json())
       .then(data=>{
         if (data.error) {
-            alert(data.error.msg)
+            toast.error(data.error.msg)
         }else{
-            alert(data.message)
+            if (data.message==='Contraseña cambiada con éxito') {
+              toast.success(data.message)
+            }else{
+              toast.error(data.message)
+            }
+            
         }
       })
-      .catch(err=>{alert('Error al enviar datos');})
+      .catch(err=>{toast.error('Error al enviar datos');})
   
     }
   

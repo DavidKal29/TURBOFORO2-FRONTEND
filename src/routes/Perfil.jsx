@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { toast } from "sonner";
 
 export default function Perfil() {
   const { user, setUser } = useAppContext()
@@ -13,7 +14,7 @@ export default function Perfil() {
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify({email: user?.email || null}),
       credentials:'include'
-    }).then(res=>res.json()).then(data=>{alert(data.message)}).catch(err=>{alert('Error al enviar el correo de verificación')})
+    }).then(res=>res.json()).then(data=>{toast.info(data.message)}).catch(err=>{toast.error('Error al enviar el correo de verificación')})
   }
 
   const logout = () =>{
@@ -32,23 +33,46 @@ export default function Perfil() {
   }
 
   const borrarCuenta = ()=>{
-
-    const confirm = window.confirm('¿Seguro que quieres borrar tu cuenta?')
-
-    if(!confirm) return
-
-    fetch('http://localhost:5000/borrar_cuenta', {
-      method:'GET',
-      credentials:'include'
-    }).then(res=>res.json())
-    .then(data=>{
-      if (data.deleted) {
-        logout()
-      }else{
-        alert('Error al intentar borrar usuario, intentalo más tarde')
-      }
-    })
-    .catch(err=>{alert('Error al enviar el correo de verificación')})
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2">
+          <p>¿Seguro que quieres borrar tu cuenta? Esta acción no se puede deshacer.</p>
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => {
+                toast.dismiss(t);
+                fetch('http://localhost:5000/borrar_cuenta', {
+                  method:'GET',
+                  credentials:'include'
+                }).then(res=>res.json())
+                  .then(data=>{
+                    if (data.deleted) {
+                      toast.success('Cuenta borrada con éxito');
+                      logout();
+                    } else {
+                      toast.error('Error al intentar borrar usuario, intentalo más tarde');
+                    }
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    toast.error('Error al borrar la cuenta');
+                  });
+              }}
+              className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+            >
+              Sí, borrar
+            </button>
+            <button
+              onClick={() => toast.dismiss(t)}
+              className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: Infinity }
+    );
   }
 
   useEffect(() => {

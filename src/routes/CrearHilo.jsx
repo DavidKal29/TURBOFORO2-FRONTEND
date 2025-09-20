@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react' 
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner' //Para mostrar notificaciones
 
 export default function CrearHilo() {
   const { user, setUser, categorias, setCategorias } = useAppContext()  
@@ -36,14 +37,19 @@ export default function CrearHilo() {
       .then(res => res.json())
       .then(data => {
         if (data.error) {
-          alert(data.error)
+          toast.error(data.error)
           if (data.cooldown) {
             setForm({ titulo: '', mensaje: '', categoria: '1' }) 
             setContador(data.cooldown)
             setDisabled(true)
           }
         } else {
-          alert(data.message)
+          if (data.message==='Hilo creado con éxito') {
+            toast.success(data.message)
+          }else{
+            toast.error(data.message)
+          }
+          
           if (data.id_hilo) {
             navigate(`/display_thread/${data.id_hilo}/page/1`)
           }
@@ -54,7 +60,7 @@ export default function CrearHilo() {
         }
       })
       .catch(err => { 
-        alert('Error al enviar los datos') 
+        toast.error('Error al enviar los datos') 
         console.error(err)
       })
   }

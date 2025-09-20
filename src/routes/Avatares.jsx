@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { toast } from 'sonner' //Para mostrar notificaciones
 
 export default function Avatares() {
   const avatarCount = 24
@@ -18,7 +19,7 @@ export default function Avatares() {
     })
     .then(res=>res.json())
     .then(data=>{
-        alert(data.message)
+        toast.success(data.message)
         if (data.changed) {
             navigate('/profile')
         }

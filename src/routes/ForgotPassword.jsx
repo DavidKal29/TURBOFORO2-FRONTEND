@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react' 
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 
 export default function ForgotPassword() {
@@ -32,12 +33,17 @@ export default function ForgotPassword() {
       }).then(res=>res.json())
       .then(data=>{
         if (data.error) {
-          alert(data.error.msg)
+          toast.error(data.error.msg)
         }else{
-          alert(data.message)
+          if (data.message === 'Correo enviado') {
+            toast.success(data.message)
+          }else{
+            toast.error(data.message)
+          }
+          
         }
       })
-      .catch(err=>{alert('Error al enviar datos');})
+      .catch(err=>{toast.error('Error al enviar datos');})
   
   
     }

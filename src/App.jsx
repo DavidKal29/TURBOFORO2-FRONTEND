@@ -1,6 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { Toaster, toast } from "sonner"; //Para notificaciones tipo toast
 
 
 //Rutas
@@ -46,6 +47,8 @@ function App() {
       </Routes>
 
       <Footer></Footer>
+
+      <Toaster position="top-right" richColors duration={2000} /> {/* Notificaciones globales */}
     </Router>
   );
 }

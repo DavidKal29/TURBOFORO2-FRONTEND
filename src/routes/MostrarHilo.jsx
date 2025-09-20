@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, Link } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
 import { useLocation } from 'react-router-dom'
-
-
+import { toast } from "sonner";
 
 export default function MostrarHilo() {
   const location = useLocation()
@@ -33,24 +32,49 @@ export default function MostrarHilo() {
           }
         }
       })
-      .catch(err => alert(err))
+      .catch(err => toast.error(err))
   }
 
-  const borrarMensaje = (id_mensaje) =>{
-    const confirm = window.confirm('¿Seguro que quieres borrar este mensaje?')
-
-    if (!confirm) return;
-
-    fetch(`http://localhost:5000/delete_message/${id_mensaje}`,{method:'GET',credentials:'include'})
-    .then(res=>res.json())
-    .then(data=>{
-      if (data.deleted) {
-        alert('Mensaje borrado con éxito')
-        obtenerMensajes()
-      }else{
-        alert(data.message)
-      }
-    })
+ 
+  const borrarMensaje = (id_mensaje) => {
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2">
+          <p>¿Seguro que quieres borrar este mensaje? Esta acción no se puede deshacer.</p>
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => {
+                toast.dismiss(t);
+                fetch(`http://localhost:5000/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.deleted) {
+                      toast.success('Mensaje borrado con éxito');
+                      obtenerMensajes();
+                    } else {
+                      toast.error(data.message);
+                    }
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    toast.error('Error al borrar el mensaje');
+                  });
+              }}
+              className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+            >
+              Sí, borrar
+            </button>
+            <button
+              onClick={() => toast.dismiss(t)}
+              className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: Infinity }
+    );
   }
 
   const handleChange = (e) => {
@@ -62,60 +86,58 @@ export default function MostrarHilo() {
   }
 
   const handleSubmit = (e) => {
-  e.preventDefault()
-  if (disabled) return
-  setDisabled(true)
+    e.preventDefault()
+    if (disabled) return
+    setDisabled(true)
 
-  const body = { ...form }
-  if (respuesta) body.id_mensaje_respuesta = respuesta.id
+    const body = { ...form }
+    if (respuesta) body.id_mensaje_respuesta = respuesta.id
 
-  fetch(`http://localhost:5000/hilo/${id_hilo}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken },
-    credentials: 'include',
-    body: JSON.stringify(body)
-  })
-    .then(res => res.json())
-    .then(data => {
-      if (data.error) {
-        alert(data.error)
-        if (data.cooldown) {
+    fetch(`http://localhost:5000/hilo/${id_hilo}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken },
+      credentials: 'include',
+      body: JSON.stringify(body)
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          toast.error(data.error)
+          if (data.cooldown) {
+            setForm({ mensaje: '' })
+            setContador(data.cooldown)
+            setDisabled(true)
+          } else {
+            setDisabled(false)
+          }
+        } else {
+          setRespuesta(null)
           setForm({ mensaje: '' })
-          setContador(data.cooldown)
-          setDisabled(true)
-        } else {
-          setDisabled(false)
+          if (data.cooldown) {
+            setContador(data.cooldown)
+            setDisabled(true)
+          } else {
+            setDisabled(false)
+          }
+          obtenerMensajes()
         }
-      } else {
-        setRespuesta(null)
-        setForm({ mensaje: '' })
-        if (data.cooldown) {
-          setContador(data.cooldown)
-          setDisabled(true)
-        } else {
-          setDisabled(false)
-        }
-        obtenerMensajes()
-      }
-    })
-    .catch(err => {
-      console.error(err)
-      alert("Error al enviar el mensaje. Intenta de nuevo.")
-      setDisabled(false) 
-    })
-}
-
+      })
+      .catch(err => {
+        console.error(err)
+        toast.error("Error al enviar el mensaje. Intenta de nuevo.")
+        setDisabled(false)
+      })
+  }
 
   useEffect(() => {
-  if (location.hash) {
-    const elementId = location.hash.replace("#", "")
-    const el = document.getElementById(elementId)
-    if (el) {
-      el.scrollIntoView({ behavior: "smooth", block: "start" })
+    if (location.hash) {
+      const elementId = location.hash.replace("#", "")
+      const el = document.getElementById(elementId)
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" })
+      }
     }
-  }
-}, [location, mensajes])
-
+  }, [location, mensajes])
 
   useEffect(() => {
     if (contador > 0) {
@@ -123,7 +145,7 @@ export default function MostrarHilo() {
         setContador(prev => {
           if (prev <= 1) {
             clearInterval(interval)
-            setDisabled(false) 
+            setDisabled(false)
             return 0
           }
           return prev - 1
@@ -153,8 +175,6 @@ export default function MostrarHilo() {
   useEffect(() => {
     if (hilo.titulo) {
       document.title = hilo.titulo
-
-      
     }
   }, [hilo.titulo])
 

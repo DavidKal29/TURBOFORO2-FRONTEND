@@ -1,75 +1,99 @@
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
-
+import { toast } from 'sonner'
 
 export default function EditProfile() {
-
-  const {user,setUser} = useAppContext()  
+  const { user, setUser } = useAppContext()
   const navigate = useNavigate()
 
-  const [csrfToken,setCsrfToken] = useState('')
+  const [csrfToken, setCsrfToken] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  const [form,setForm] = useState({
-    email:user?.email || '',
-    username:user?.username || '',
-    description:user?.description || ''
+  const [form, setForm] = useState({
+    email: '',
+    username: '',
+    description: ''
   })
 
-  const handleChange =(e)=>{
+  const handleChange = (e) => {
     setForm({
       ...form,
       [e.target.name]: e.target.value
     })
   }
 
-  const handleSubmit =(e)=>{
+  const handleSubmit = (e) => {
     e.preventDefault()
 
-    fetch('http://localhost:5000/editar_perfil',{
-      credentials:'include',
-      method:'POST',
+    if (!csrfToken) {
+      toast.error('Token de seguridad no listo, inténtalo de nuevo')
+      return
+    }
+
+    console.log('Enviando datos:', form, 'CSRF:', csrfToken)
+
+    fetch('http://localhost:5000/editar_perfil', {
+      credentials: 'include',
+      method: 'POST',
       body: JSON.stringify(form),
-      headers:{'Content-Type':'application/json','CSRF-Token':csrfToken}
-    }).then(res=>res.json())
-          .then(data=>{
-            if (data.changed) {
-              navigate('/profile')
-            }else{
-                if (data.error) {
-                    alert(data.error.msg)
-                }else{
-                    alert(data.message)
-                }
-            }
-          })
-          .catch(err=>{alert('Error al enviar los datos');})
-
-
+      headers: {
+        'Content-Type': 'application/json',
+        'CSRF-Token': csrfToken
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.changed) {
+          toast.success(data.message)
+          navigate('/profile')
+        } else {
+          if (data.error) {
+            toast.error(data.error.msg)
+          } else {
+            toast.error(data.message || 'Error al actualizar')
+          }
+        }
+      })
+      .catch((err) => {
+        toast.error('Error al enviar los datos')
+        console.error(err)
+      })
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     document.title = 'Edit Profile'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
-      .then(res => res.json())
-      .then(data => {
-        if (!data.loggedIn) {
+    Promise.all([
+      fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' }).then((res) => res.json()),
+      fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' }).then((res) => res.json())
+    ])
+      .then(([perfil, csrf]) => {
+        if (!perfil.loggedIn) {
           console.log('El usuario no está logueado')
           setUser(null)
           navigate('/login')
         } else {
           console.log('El usuario está logueado')
-          setUser(data.user)
+          setUser(perfil.user)
+          setForm({
+            email: perfil.user.email,
+            username: perfil.user.username,
+            description: perfil.user.description || ''
+          })
         }
+        setCsrfToken(csrf.csrfToken)
       })
+      .catch((err) => {
+        console.error('Error cargando datos iniciales', err)
+        toast.error('Error al cargar los datos del perfil')
+      })
+      .finally(() => setLoading(false))
+  }, [])
 
-    fetch('http://localhost:5000/csrf-token',{credentials:'include',method:'GET'})
-    .then(res=>res.json())
-    .then(data=>{setCsrfToken(data.csrfToken)})
-
-
-  },[])
+  if (loading) {
+    return <div className="text-center py-20 text-white">Cargando...</div>
+  }
 
   return (
     <div className="flex py-[150px] justify-center items-center bg-gradient-to-r from-red-700 to-red-500 px-4">
@@ -98,7 +122,7 @@ export default function EditProfile() {
 
         {/* Username */}
         <div className="flex flex-col">
-          <label htmlFor="email" className="text-sm font-semibold text-gray-600">
+          <label htmlFor="username" className="text-sm font-semibold text-gray-600">
             Username
           </label>
           <input
@@ -117,15 +141,13 @@ export default function EditProfile() {
             Description
           </label>
           <textarea
-            type="text"
             name="description"
             value={form.description}
             onChange={handleChange}
-            placeholder="Describete"
+            placeholder="Descríbete"
             className="resize-none mt-1 px-4 py-2 h-[10rem] border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
-
 
         {/* Button */}
         <button
@@ -134,8 +156,6 @@ export default function EditProfile() {
         >
           Enviar
         </button>
-
-        
       </form>
     </div>
   )

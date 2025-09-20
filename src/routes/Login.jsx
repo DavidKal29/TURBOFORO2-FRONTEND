@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react' 
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'sonner'
 
 
 export default function Login() {
@@ -37,13 +38,13 @@ export default function Login() {
           navigate('/profile')
         }else{
           if (data.error) {
-            alert(data.error.msg)
+            toast.error(data.error.msg)
           }else{
-            alert(data.message)
+            toast.error(data.message)
           }
         }
       })
-      .catch(err=>{alert('Error al enviar datos');})
+      .catch(err=>{toast.error('Error al enviar datos');})
   
   
     }

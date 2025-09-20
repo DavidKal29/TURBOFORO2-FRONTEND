@@ -62,39 +62,49 @@ export default function MostrarHilo() {
   }
 
   const handleSubmit = (e) => {
-    e.preventDefault()
-    if (disabled) return
-    setDisabled(true)
+  e.preventDefault()
+  if (disabled) return
+  setDisabled(true)
 
-    const body = { ...form }
-    if (respuesta) body.id_mensaje_respuesta = respuesta.id
+  const body = { ...form }
+  if (respuesta) body.id_mensaje_respuesta = respuesta.id
 
-    fetch(`http://localhost:5000/hilo/${id_hilo}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken },
-      credentials: 'include',
-      body: JSON.stringify(body)
-    })
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          alert(data.error)
-          if (data.cooldown) {
-            setForm({ mensaje: '' })
-            setContador(data.cooldown)
-          }
-        } else {
-          setRespuesta(null)
+  fetch(`http://localhost:5000/hilo/${id_hilo}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken },
+    credentials: 'include',
+    body: JSON.stringify(body)
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.error) {
+        alert(data.error)
+        if (data.cooldown) {
           setForm({ mensaje: '' })
-          if (data.cooldown) setContador(data.cooldown)
-          obtenerMensajes()
+          setContador(data.cooldown)
+          setDisabled(true)
+        } else {
+          setDisabled(false)
         }
-      })
-      .catch(err => {
-        console.error(err)
-        alert("Error al enviar el mensaje. Intenta de nuevo.")
-      })
-  }
+      } else {
+        setRespuesta(null)
+        setForm({ mensaje: '' })
+        if (data.cooldown) {
+          setContador(data.cooldown)
+          setDisabled(true)
+        } else {
+          setDisabled(false)
+        }
+        obtenerMensajes()
+      }
+    })
+    .catch(err => {
+      console.error(err)
+      alert("Error al enviar el mensaje. Intenta de nuevo.")
+      setDisabled(false) 
+    })
+}
+
 
   useEffect(() => {
   if (location.hash) {

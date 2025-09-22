@@ -52,12 +52,12 @@ export default function Header() {
         (<>
           <div className="flex items-center gap-4 md:gap-6">
             <Link to="/profile">
-              <button className="bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+              <button className="bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full max-[360px]:px-2 max-[360px]:py-2 px-4 sm:px-5 py-3 font-semibold text-sm md:text-base cursor-pointer">
                 <i class="fa-solid fa-user"></i> {user.username}
               </button>
             </Link>
             <button onClick={logout}>
-              <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+              <button className="bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full max-[360px]:px-2 max-[360px]:py-2 px-4 sm:px-5 py-3 font-semibold text-sm md:text-base cursor-pointer">
                 Cerrar Sesión
               </button>
             </button>
@@ -69,12 +69,12 @@ export default function Header() {
       (<>
         <div className="flex items-center gap-4 md:gap-6">
           <Link to="/login">
-            <button className="bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+            <button className="bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full max-[360px]:px-2 max-[360px]:py-2 px-4 sm:px-5 py-3 font-semibold text-sm md:text-base cursor-pointer">
               Iniciar Sesión
             </button>
           </Link>
           <Link to="/register">
-            <button className="bg-gradient-to-r from-purple-700 to-purple-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base cursor-pointer">
+            <button className="bg-gradient-to-r from-purple-700 to-purple-500 shadow-lg text-white rounded-full max-[360px]:px-2 max-[360px]:py-2 px-4 sm:px-5 py-3 font-semibold text-sm md:text-base cursor-pointer">
               Crear cuenta
             </button>
           </Link>

@@ -45,7 +45,7 @@ export default function MostrarHilo() {
             <button
               onClick={() => {
                 toast.dismiss(t);
-                fetch(`http://localhost:5000/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
+                fetch(`http://localhost:5000${user?.rol === 'admin' ? '/admin' : ''}/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
                   .then(res => res.json())
                   .then(data => {
                     if (data.deleted) {
@@ -228,13 +228,17 @@ export default function MostrarHilo() {
                     </div>
                   </div>
 
-                  {user && user.id === msg.id_usuario && (
+                  {user && (user.id === msg.id_usuario || user.rol === 'admin') && (
                     <div className="flex gap-2 ml-4">
-                      <button onClick={()=>{borrarMensaje(msg.id)}} className="p-1 cursor-pointer rounded-lg bg-red-600 text-white shadow-md">
-                        <i className="fa-solid fa-trash"></i> 
+                      <button
+                        onClick={() => borrarMensaje(msg.id)}
+                        className="p-1 cursor-pointer rounded-lg bg-red-600 text-white shadow-md"
+                      >
+                        <i className="fa-solid fa-trash"></i>
                       </button>
                     </div>
                   )}
+
                 </div>
 
                 {msg.id_mensaje_respuesta>0 && (

@@ -1,14 +1,65 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { Link } from 'react-router-dom'
+import { useAppContext } from '../context/AppContext'
+import { toast } from "sonner";
 
 export default function Usuario() {
   const [userData, setUserData] = useState(null)
   const navigate = useNavigate()
   const {id_usuario} = useParams()
+  const {user,setUser} = useAppContext()
+
+  const borrarUsuario = (id_usuario) => {
+    toast(
+      (t) => (
+        <div className="flex flex-col gap-2">
+          <p>¿Seguro que quieres borrar a este usuario? Esta acción no se puede deshacer.</p>
+          <div className="flex gap-2 justify-end">
+            <button
+              onClick={() => {
+                toast.dismiss(t);
+                fetch(`http://localhost:5000/admin/delete_user/${id_usuario}`, { method: 'GET', credentials: 'include' })
+                  .then(res => res.json())
+                  .then(data => {
+                    if (data.deleted) {
+                      toast.success('Usuario borrado con éxito');
+                      navigate('/')
+                    } else {
+                      toast.error(data.message);
+                    }
+                  })
+                  .catch(err => {
+                    console.error(err);
+                    toast.error('Error al borrar el mensaje');
+                  });
+              }}
+              className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+            >
+              Sí, borrar
+            </button>
+            <button
+              onClick={() => toast.dismiss(t)}
+              className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: Infinity }
+    );
+  }
 
   useEffect(() => {
     document.title = 'Usuario'
+
+    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+      .then(res => res.json())
+      .then(data => {
+        if (!data.loggedIn) setUser(null)
+        else setUser(data.user)
+      })
 
     fetch(`http://localhost:5000/usuario/${id_usuario}`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
@@ -19,6 +70,7 @@ export default function Usuario() {
           navigate('/*')
         }
       })
+
       
     }, [])
 
@@ -76,6 +128,18 @@ export default function Usuario() {
               {userData?.username || 'Username'} 
             </h1>
           </div>
+
+          {user && user?.rol === 'admin' && (
+            <div className={`grid grid-cols-1 lg:grid-cols-4 gap-4 items-center justify-center`}>
+                <button
+                  onClick={()=>{borrarUsuario(id_usuario)}}
+                  className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base"
+                >
+                  Borrar Cuenta
+                </button>
+            </div>
+          )}
+        
         </div>
 
         <div className="mb-10">
@@ -85,6 +149,10 @@ export default function Usuario() {
               "Este usuario todavía no ha escrito una descripción personal, pero seguro que tiene mucho que contar."}
           </p>
         </div>
+
+
+
+        
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">

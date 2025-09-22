@@ -167,9 +167,9 @@ export default function Perfil() {
             </h1>
 
             {/* Botones responsivos */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 w-full">
+            <div className={`grid grid-cols-1 ${user?.verificado ? 'sm:grid-cols-3 md:grid-cols-3' : 'sm:grid-cols-2 md:grid-cols-2'} lg:grid-cols-4 gap-4 items-center justify-center`}>
               <Link to="/edit_profile">
-                <button className="cursor-pointer w-full bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base">
+                <button className="cursor-pointer w-full bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base">
                   Editar Perfil
                 </button>
               </Link>
@@ -177,21 +177,21 @@ export default function Perfil() {
               {!user?.verificado && (
                 <button
                   onClick={verificarCorreo}
-                  className="cursor-pointer w-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base"
+                  className="cursor-pointer w-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base"
                 >
-                  Verificar Correo
+                  Verificar Email
                 </button>
               )}
 
               <Link to="/my_threads/page/1">
-                <button className="cursor-pointer w-full bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base">
-                  Ver mis Hilos
+                <button className="cursor-pointer w-full bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base">
+                  Mis hilos
                 </button>
               </Link>
 
               <button
                 onClick={borrarCuenta}
-                className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-5 py-2 font-semibold text-sm md:text-base"
+                className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base"
               >
                 Borrar Cuenta
               </button>

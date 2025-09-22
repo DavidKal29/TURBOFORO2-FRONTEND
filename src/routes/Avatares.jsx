@@ -19,7 +19,7 @@ export default function Avatares() {
     })
     .then(res=>res.json())
     .then(data=>{
-        toast.success(data.message)
+        toast.info(data.message)
         if (data.changed) {
             navigate('/profile')
         }

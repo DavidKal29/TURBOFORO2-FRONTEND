@@ -136,6 +136,15 @@ export default function Categoria() {
         </p>
       </div>
 
+      <div class="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap pb-6">
+        {Array.from({length:Math.ceil(encontrado.counter/39)},(_,i)=>i+1).map((p,index)=>(
+            <Link to={`/categoria/${categoria}/page/${p}`}  key={index} className={`${page===p ? ('bg-indigo-900') : ('bg-blue-500')} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`} >
+              {p}
+            </Link>
+        ))}
+        
+      </div>
+
       {/* GRID DE HILOS */}
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {hilos.map((hilo, index) => (

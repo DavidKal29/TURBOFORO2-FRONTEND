@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
-import { Link } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
-import { toast } from "sonner";
+import { toast } from "sonner"
+import { Link } from 'react-router-dom'
 
 export default function Usuario() {
-  const [userData, setUserData] = useState(null)
+  const [userData, setUserData] = useState(null) // Datos del usuario que estamos viendo
   const navigate = useNavigate()
-  const {id_usuario} = useParams()
-  const {user,setUser} = useAppContext()
+  const { id_usuario } = useParams() // ID del usuario desde la URL
+  const { user, setUser } = useAppContext() // Usuario logueado actual
 
+  // Función para borrar un usuario (solo admins)
   const borrarUsuario = (id_usuario) => {
     toast(
       (t) => (
@@ -31,7 +32,7 @@ export default function Usuario() {
                   })
                   .catch(err => {
                     console.error(err);
-                    toast.error('Error al borrar el mensaje');
+                    toast.error('Error al borrar el usuario');
                   });
               }}
               className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
@@ -48,12 +49,14 @@ export default function Usuario() {
         </div>
       ),
       { duration: Infinity }
-    );
+    )
   }
 
+  // useEffect para obtener datos del usuario y del usuario logueado
   useEffect(() => {
     document.title = 'Usuario'
 
+    // Verificar si el usuario logueado sigue activo
     fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
@@ -61,87 +64,94 @@ export default function Usuario() {
         else setUser(data.user)
       })
 
+    // Obtener datos del usuario cuyo perfil se está viendo
     fetch(`http://localhost:5000/usuario/${id_usuario}`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.user_data) {
           setUserData(data.user_data)
         } else {
-          navigate('/*')
+          navigate('/*') // Redirige a página 404 si no existe
         }
       })
-
-      
-    }, [])
-
-    
+  }, [])
 
   return (
     <div className="mt-[80px] flex justify-center items-center flex-col gap-8 px-4 sm:px-6 py-10 bg-gray-50">
 
-      <div class="w-full max-w-6xl bg-gradient-to-r from-blue-200 to-gray-500 rounded-3xl shadow-2xl p-8 mt-6">
-        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6">Perfil de Usuario</h1>
+      {/* --- Badges principales --- */}
+      <div className="w-full max-w-6xl bg-gradient-to-r from-blue-200 to-gray-500 rounded-3xl shadow-2xl p-8 mt-6">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6">Perfil de Usuario</h1>
 
-        <div class="flex flex-col sm:flex-row justify-between gap-6">
+        <div className="flex flex-col sm:flex-row justify-between gap-6">
 
-            <div class="flex items-center gap-3 bg-blue-50 p-4 rounded-xl shadow-md">
-            <div class="w-6 h-6 flex items-center justify-center rounded-full bg-blue-600">
-                {userData?.verificado ? (<><i class="fas fa-check text-white text-sm"></i></>) : (<><i class="fa-solid fa-x text-white text-sm"></i></>)}    
+          {/* Badge: Usuario verificado */}
+          <div className="flex items-center gap-3 bg-blue-50 p-4 rounded-xl shadow-md">
+            <div className="w-6 h-6 flex items-center justify-center rounded-full bg-blue-600">
+              {userData?.verificado 
+                ? <i className="fas fa-check text-white text-sm"></i>
+                : <i className="fa-solid fa-x text-white text-sm"></i>}
             </div>
-            <span class="text-gray-800 font-medium">Usuario Verificado</span>
-            </div>
+            <span className="text-gray-800 font-medium">Usuario Verificado</span>
+          </div>
 
-            <div class="flex items-center gap-3 bg-green-50 p-4 rounded-xl shadow-md">
-            <div class="w-6 h-6 flex items-center justify-center rounded-full bg-green-600">
-                {userData?.rol === 'admin' ? (<><i class="fas fa-check text-white text-sm"></i></>) : (<><i class="fa-solid fa-x text-white text-sm"></i></>)}    
+          {/* Badge: Usuario Admin */}
+          <div className="flex items-center gap-3 bg-green-50 p-4 rounded-xl shadow-md">
+            <div className="w-6 h-6 flex items-center justify-center rounded-full bg-green-600">
+              {userData?.rol === 'admin'
+                ? <i className="fas fa-check text-white text-sm"></i>
+                : <i className="fa-solid fa-x text-white text-sm"></i>}
             </div>
-            <span class="text-gray-800 font-medium">Usuario Admin</span>
-            </div>
+            <span className="text-gray-800 font-medium">Usuario Admin</span>
+          </div>
 
-        
-            <div class="flex items-center gap-3 bg-red-50 p-4 rounded-xl shadow-md">
-            <div class="w-6 h-6 flex items-center justify-center rounded-full bg-red-600">
-                {userData?.veterania >= 1 ? (<><i class="fas fa-check text-white text-sm"></i></>) : (<><i class="fa-solid fa-x text-white text-sm"></i></>)}    
+          {/* Badge: Usuario Veterano */}
+          <div className="flex items-center gap-3 bg-red-50 p-4 rounded-xl shadow-md">
+            <div className="w-6 h-6 flex items-center justify-center rounded-full bg-red-600">
+              {userData?.veterania >= 1
+                ? <i className="fas fa-check text-white text-sm"></i>
+                : <i className="fa-solid fa-x text-white text-sm"></i>}
             </div>
-            <span class="text-gray-800 font-medium">Usuario Veterano</span>
-            </div>
+            <span className="text-gray-800 font-medium">Usuario Veterano</span>
+          </div>
+
         </div>
       </div>
 
-      
+      {/* --- Contenedor principal del perfil --- */}
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-2xl p-8">
 
-        
-        
+        {/* Avatar + Info */}
         <div className="flex flex-col md:flex-row items-center gap-6 mb-8">
           <div className="relative">
-                <img
-                src={`/avatars/avatar${userData?.avatar}.webp` || `/avatars/avatar16.webp`}
-                alt="avatar"
-                className="w-32 h-32 rounded-full border-4 border-gray-300 shadow-lg object-cover"
-                />
-            </div>
+            <img
+              src={`/avatars/avatar${userData?.avatar}.webp` || `/avatars/avatar16.webp`}
+              alt="avatar"
+              className="w-32 h-32 rounded-full border-4 border-gray-300 shadow-lg object-cover"
+            />
+          </div>
 
-          
           <div className="text-center md:text-left flex flex-col gap-2">
             <h1 className="text-3xl md:text-4xl font-extrabold text-gray-800">
-              {userData?.username || 'Username'} 
+              {userData?.username || 'Username'}
             </h1>
           </div>
 
+          {/* Botón para borrar usuario (solo admins) */}
           {user && user?.rol === 'admin' && (
-            <div className={`grid grid-cols-1 lg:grid-cols-4 gap-4 items-center justify-center`}>
-                <button
-                  onClick={()=>{borrarUsuario(id_usuario)}}
-                  className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base"
-                >
-                  Borrar Cuenta
-                </button>
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-center justify-center">
+              <button
+                onClick={() => { borrarUsuario(id_usuario) }}
+                className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base"
+              >
+                Borrar Cuenta
+              </button>
             </div>
           )}
-        
+
         </div>
 
+        {/* Descripción del usuario */}
         <div className="mb-10">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Descripción</h2>
           <p className="text-gray-700 leading-relaxed">
@@ -150,10 +160,7 @@ export default function Usuario() {
           </p>
         </div>
 
-
-
-        
-
+        {/* Stats: Hilos, Mensajes, Fecha de registro */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
           <div className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Hilos</h3>
@@ -179,4 +186,5 @@ export default function Usuario() {
     </div>
   )
 }
+
 

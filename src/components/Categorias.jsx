@@ -3,33 +3,33 @@ import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 
 export default function Categorias() {
+  // Accedemos al contexto global
+  const { categorias, setCategorias } = useAppContext();
 
-  const {categorias,setCategorias} = useAppContext()
-       
+  useEffect(() => {
+    // Función para obtener las categorías desde el backend
+    const obtenerCategorias = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/categorias", {
+          method: "GET",
+          credentials: "include",
+        });
 
-    useEffect(()=>{
-      const obtenerCategorias = async()=>{
-        try {
-          const res = await fetch('http://localhost:5000/categorias',{method:'GET',credentials:'include'})
+        const data = await res.json();
 
-          const data = await res.json()
-
-          if (data.categorias) {
-            setCategorias(data.categorias)
-          }else{
-            setCategorias([])
-          }
-          
-        } catch (error) {
-          console.log('Error:',error);
+        // Guardamos categorías si existen, si no, dejamos arreglo vacío
+        if (data.categorias) {
+          setCategorias(data.categorias);
+        } else {
+          setCategorias([]);
         }
-
+      } catch (error) {
+        console.log("Error:", error);
       }
+    };
 
-      obtenerCategorias()
-
-    },[])
-  
+    obtenerCategorias();
+  }, []);
 
   return (
     <div className="bg-gray-50 rounded-xl shadow-lg p-6 mb-12 w-full">
@@ -38,28 +38,28 @@ export default function Categorias() {
       </h1>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2 gap-4">
-
         {categorias.length === 0 ? (
-          <p className="text-center text-gray-500 py-4">Las categorias: {categorias[0]}</p>
+          // Mensaje si no hay categorías
+          <p className="text-center text-gray-500 py-4">
+            Las categorias: {categorias[0]}
+          </p>
         ) : (
-          categorias.map((cat,index) => (
-            <Link to={`/categoria/${cat.nombre}/page/1`}
+          // Renderizamos cada categoría con su link
+          categorias.map((cat, index) => (
+            <Link
+              to={`/categoria/${cat.nombre}/page/1`}
               key={index}
               className={`flex items-center gap-3 p-4 bg-white rounded-xl shadow hover:shadow-xl transition-all duration-300 cursor-pointer border-l-4 border-${cat.color}`}
             >
               <i
                 className={`fa-solid ${cat.icono} text-${cat.color} text-2xl`}
               ></i>
-              <span
-                className={`font-semibold text-lg md:text-xl`}
-              >
+              <span className="font-semibold text-lg md:text-xl">
                 {cat.nombre}
               </span>
             </Link>
           ))
         )}
-
-        
       </div>
     </div>
   );

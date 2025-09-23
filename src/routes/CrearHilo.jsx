@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner' //Para mostrar notificaciones
+import { toast } from 'sonner' // notificaciones
 
 export default function CrearHilo() {
-  const { user, setUser, categorias, setCategorias } = useAppContext()  
+  const { user, setUser, categorias, setCategorias } = useAppContext()
   const navigate = useNavigate()
 
   const [csrfToken, setCsrfToken] = useState('')
@@ -17,6 +17,7 @@ export default function CrearHilo() {
     categoria: '1'
   })
 
+  // manejar cambios del formulario
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -24,9 +25,10 @@ export default function CrearHilo() {
     })
   }
 
+  // enviar formulario
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (disabled) return 
+    if (disabled) return
 
     fetch('http://localhost:5000/crearHilo', {
       credentials: 'include',
@@ -39,40 +41,35 @@ export default function CrearHilo() {
         if (data.error) {
           toast.error(data.error)
           if (data.cooldown) {
-            setForm({ titulo: '', mensaje: '', categoria: '1' }) 
+            setForm({ titulo: '', mensaje: '', categoria: '1' })
             setContador(data.cooldown)
             setDisabled(true)
           }
         } else {
-          if (data.message==='Hilo creado con éxito') {
-            toast.success(data.message)
-          }else{
-            toast.error(data.message)
-          }
-          
-          if (data.id_hilo) {
-            navigate(`/display_thread/${data.id_hilo}/page/1`)
-          }
+          if (data.message === 'Hilo creado con éxito') toast.success(data.message)
+          else toast.error(data.message)
+
+          if (data.id_hilo) navigate(`/display_thread/${data.id_hilo}/page/1`)
           if (data.cooldown) {
             setContador(data.cooldown)
             setDisabled(true)
           }
         }
       })
-      .catch(err => { 
-        toast.error('Error al enviar los datos') 
+      .catch(err => {
+        toast.error('Error al enviar los datos')
         console.error(err)
       })
   }
 
-  
+  // cooldown contador
   useEffect(() => {
     if (contador > 0) {
       const interval = setInterval(() => {
         setContador(prev => {
           if (prev <= 1) {
             clearInterval(interval)
-            setDisabled(false) 
+            setDisabled(false)
             return 0
           }
           return prev - 1
@@ -83,6 +80,7 @@ export default function CrearHilo() {
     }
   }, [contador])
 
+  // check login, obtener CSRF y categorías
   useEffect(() => {
     document.title = 'Create Thread'
 
@@ -92,9 +90,7 @@ export default function CrearHilo() {
         if (!data.loggedIn) {
           setUser(null)
           navigate('/login')
-        } else {
-          setUser(data.user)
-        }
+        } else setUser(data.user)
       })
 
     fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
@@ -124,7 +120,7 @@ export default function CrearHilo() {
           Crear Hilo
         </h1>
 
-        {/* Titulo */}
+        {/* Título */}
         <div className="flex flex-col">
           <label htmlFor="titulo" className="text-sm font-semibold text-gray-600">
             Título
@@ -140,19 +136,20 @@ export default function CrearHilo() {
           />
         </div>
 
-        {/* Categoria */}
+        {/* Categoría */}
         <div className="flex flex-col">
           <label htmlFor="categoria" className="text-sm font-semibold text-gray-600">
             Categoría
           </label>
-          <select 
+          <select
             name="categoria"
             value={form.categoria}
             onChange={handleChange}
             disabled={disabled}
-            className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {categorias.map((categoria,index)=>(
-                <option key={index} value={categoria.id}>{categoria.nombre}</option>
+            className="mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {categorias.map((categoria, index) => (
+              <option key={index} value={categoria.id}>{categoria.nombre}</option>
             ))}
           </select>
         </div>
@@ -172,7 +169,7 @@ export default function CrearHilo() {
           />
         </div>
 
-        {/* Button */}
+        {/* Botón */}
         <button
           type="submit"
           disabled={disabled}

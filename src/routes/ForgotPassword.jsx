@@ -1,84 +1,67 @@
-import React, { useEffect, useState } from 'react' 
+import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
-
+import { toast } from 'sonner' // notificaciones
 
 export default function ForgotPassword() {
-
-  const {user,setUser} = useAppContext()  
+  const { user, setUser } = useAppContext()
   const navigate = useNavigate()
 
-  const [csrfToken,setCsrfToken] = useState('')
+  const [csrfToken, setCsrfToken] = useState('')
+  const [form, setForm] = useState({ email: '' })
 
-  const [form,setForm] = useState({
-      email:''
+  // manejar cambios del formulario
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
+
+  // enviar formulario
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    fetch('http://localhost:5000/recuperarPassword', {
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify(form),
+      headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken }
     })
-  
-    const handleChange =(e)=>{
-      setForm({
-        ...form,
-        [e.target.name]: e.target.value
-      })
-    }
-  
-    const handleSubmit =(e)=>{
-      e.preventDefault()
-  
-      fetch('http://localhost:5000/recuperarPassword',{
-        credentials:'include',
-        method:'POST',
-        body: JSON.stringify(form),
-        headers:{'Content-Type':'application/json','CSRF-Token':csrfToken}
-      }).then(res=>res.json())
-      .then(data=>{
-        if (data.error) {
-          toast.error(data.error.msg)
-        }else{
-          if (data.message === 'Correo enviado') {
-            toast.success(data.message)
-          }else{
-            toast.error(data.message)
-          }
-          
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.error) toast.error(data.error.msg)
+        else {
+          if (data.message === 'Correo enviado') toast.success(data.message)
+          else toast.error(data.message)
         }
       })
-      .catch(err=>{toast.error('Error al enviar datos');})
-  
-  
-    }
-  
+      .catch(() => toast.error('Error al enviar datos'))
+  }
 
-  useEffect(()=>{
+  // cargar datos iniciales y CSRF
+  useEffect(() => {
     document.title = 'Forgot Password'
 
-    fetch('http://localhost:5000/perfil',{credentials:'include',method:'GET'})
-    .then(res=>res.json())
-    .then(data=>{
-      if (data.loggedIn) {
-        console.log('El usuario está logueado');
-        setUser(data.user)
-        navigate('/profile')
-        
-        
-      }else{
-        console.log('El usuario no está logueado');
-      }
-    })
+    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.loggedIn) {
+          console.log('Usuario logueado')
+          setUser(data.user)
+          navigate('/profile')
+        } else {
+          console.log('Usuario no logueado')
+        }
+      })
 
-
-    fetch('http://localhost:5000/csrf-token',{credentials:'include',method:'GET'})
-    .then(res=>res.json())
-    .then(data=>{setCsrfToken(data.csrfToken)})
-
-
-  },[])
+    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+      .then((res) => res.json())
+      .then((data) => setCsrfToken(data.csrfToken))
+  }, [])
 
   return (
     <div className="flex justify-center items-center pt-[150px] pb-[50px] bg-gradient-to-r from-green-600 to-green-800 px-4">
       <form
         className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md flex flex-col gap-6"
-        onSubmit={handleSubmit} 
+        onSubmit={handleSubmit}
       >
         <h1 className="text-3xl font-extrabold text-center text-green-800">
           Recuperar Contraseña
@@ -99,7 +82,7 @@ export default function ForgotPassword() {
           />
         </div>
 
-        {/* Button */}
+        {/* Botón */}
         <button
           type="submit"
           className="cursor-pointer bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
@@ -110,7 +93,10 @@ export default function ForgotPassword() {
         {/* Recordaste contraseña */}
         <div className="text-center">
           <p className="text-sm text-green-600">
-            ¿Recordaste la contraseña? <a href="/login" className='text-green-800 font-bold'>Inicar Sesión</a>
+            ¿Recordaste la contraseña?{' '}
+            <a href="/login" className="text-green-800 font-bold">
+              Iniciar Sesión
+            </a>
           </p>
         </div>
       </form>

@@ -1,81 +1,67 @@
 import React, { useEffect, useState } from 'react' 
 import { useAppContext } from '../context/AppContext'
-import { useNavigate } from 'react-router-dom'
-import { useParams } from 'react-router-dom'
-import { toast } from 'sonner' //Para mostrar notificaciones
-
+import { useNavigate, useParams } from 'react-router-dom'
+import { toast } from 'sonner' // notificaciones
 
 export default function ChangePassword() {
-
-  const {user,setUser} = useAppContext()  
+  const { user, setUser } = useAppContext()  
   const navigate = useNavigate()
-
   const Parametros = useParams()
 
-  const [csrfToken,setCsrfToken] = useState('')
+  const [csrfToken, setCsrfToken] = useState('')
+  const [form, setForm] = useState({
+    new_password: '',
+    confirm_password: ''
+  })
 
-  const [form,setForm] = useState({
-      new_password:'',
-      confirm_password:''
+  // manejar cambios del formulario
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
     })
-  
-    const handleChange =(e)=>{
-      setForm({
-        ...form,
-        [e.target.name]: e.target.value
-      })
-    }
-  
-    const handleSubmit =(e)=>{
-      e.preventDefault()
-  
-      fetch(`http://localhost:5000/cambiarPassword/${Parametros.token}`,{
-        credentials:'include',
-        method:'POST',
-        body: JSON.stringify(form),
-        headers:{'Content-Type':'application/json','CSRF-Token':csrfToken}
-      }).then(res=>res.json())
-      .then(data=>{
-        if (data.error) {
-            toast.error(data.error.msg)
-        }else{
-            if (data.message==='Contraseña cambiada con éxito') {
-              toast.success(data.message)
-            }else{
-              toast.error(data.message)
-            }
-            
+  }
+
+  // enviar formulario
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    fetch(`http://localhost:5000/cambiarPassword/${Parametros.token}`, {
+      credentials: 'include',
+      method: 'POST',
+      body: JSON.stringify(form),
+      headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken }
+    })
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) toast.error(data.error.msg)
+        else {
+          if (data.message === 'Contraseña cambiada con éxito') toast.success(data.message)
+          else toast.error(data.message)
         }
       })
-      .catch(err=>{toast.error('Error al enviar datos');})
-  
-    }
-  
+      .catch(() => { toast.error('Error al enviar datos') })
+  }
 
-  useEffect(()=>{
+  // check login y obtener CSRF
+  useEffect(() => {
     document.title = 'Change Password'
 
-    fetch('http://localhost:5000/perfil',{credentials:'include',method:'GET'})
-    .then(res=>res.json())
-    .then(data=>{
-      if (data.loggedIn) {
-        console.log('El usuario está logueado');
-        setUser(data.user)
-        navigate('/profile')
-        
-        
-      }else{
-        console.log('El usuario no está logueado');
-      }
-    })
+    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.loggedIn) {
+          console.log('Usuario logueado')
+          setUser(data.user)
+          navigate('/profile')
+        } else console.log('Usuario no logueado')
+      })
 
+    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+      .then(res => res.json())
+      .then(data => { setCsrfToken(data.csrfToken) })
 
-    fetch('http://localhost:5000/csrf-token',{credentials:'include',method:'GET'})
-    .then(res=>res.json())
-    .then(data=>{setCsrfToken(data.csrfToken)})
-
-
-  },[])
+  }, [])
 
   return (
     <div className="flex py-[150px] justify-center items-center bg-gradient-to-r from-pink-700 to-pink-500 px-4">
@@ -88,12 +74,9 @@ export default function ChangePassword() {
           Cambiar Contraseña
         </h1>
 
-        {/* New Password */}
+        {/* Nueva contraseña */}
         <div className="flex flex-col">
-          <label
-            htmlFor="new_password"
-            className="text-sm font-semibold text-gray-600"
-          >
+          <label htmlFor="new_password" className="text-sm font-semibold text-gray-600">
             Nueva Contraseña
           </label>
           <input
@@ -107,12 +90,9 @@ export default function ChangePassword() {
           />
         </div>
 
-        {/* Confirm Password */}
+        {/* Confirmar contraseña */}
         <div className="flex flex-col">
-          <label
-            htmlFor="new_password"
-            className="text-sm font-semibold text-gray-600"
-          >
+          <label htmlFor="confirm_password" className="text-sm font-semibold text-gray-600">
             Confirmar Contraseña
           </label>
           <input
@@ -126,7 +106,7 @@ export default function ChangePassword() {
           />
         </div>
 
-        {/* Button */}
+        {/* Botón */}
         <button
           type="submit"
           className="cursor-pointer bg-gradient-to-r from-pink-500 to-pink-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
@@ -134,7 +114,7 @@ export default function ChangePassword() {
           Enviar
         </button>
 
-        {/* No tienes cuenta */}
+        {/* Iniciar sesión */}
         <div className="text-center">
           <p className="text-sm text-pink-600">
             ¿Cambiaste la contraseña? <a href="/login" className='text-pink-800 font-bold'>Iniciar Sesión</a>

@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams, Link } from 'react-router-dom'
+import { useNavigate, useParams, Link, useLocation } from 'react-router-dom'
 import { useAppContext } from '../context/AppContext'
-import { useLocation } from 'react-router-dom'
-import { toast } from "sonner";
+import { toast } from "sonner"
 
 export default function MostrarHilo() {
   const location = useLocation()
-  const [mensajes, setMensajes] = useState([])
-  const [hilo, setHilo] = useState({})
+  const navigate = useNavigate()
   const { id_hilo, page } = useParams()
   const { user, setUser } = useAppContext()
-  const navigate = useNavigate()
 
-  const [form, setForm] = useState({ mensaje: '' })
-  const [respuesta, setRespuesta] = useState(null)
-  const [csrfToken, setCsrfToken] = useState('')
+  const [mensajes, setMensajes] = useState([]) // Lista de mensajes del hilo
+  const [hilo, setHilo] = useState({}) // Datos del hilo
+  const [form, setForm] = useState({ mensaje: '' }) // Formulario de mensaje
+  const [respuesta, setRespuesta] = useState(null) // Mensaje al que se responde
+  const [csrfToken, setCsrfToken] = useState('') // Token CSRF para envíos
+  const [disabled, setDisabled] = useState(false) // Bloqueo de botón mientras espera cooldown
+  const [contador, setContador] = useState(0) // Contador de cooldown en segundos
 
-  const [disabled, setDisabled] = useState(false)
-  const [contador, setContador] = useState(0)
-
+  // Función para obtener mensajes del hilo
   const obtenerMensajes = () => {
     fetch(`http://localhost:5000/hilo/${id_hilo}/${page}`, { method: 'GET', credentials: 'include' })
       .then(res => res.json())
@@ -28,14 +27,14 @@ export default function MostrarHilo() {
             setHilo(data.hilo)
             setMensajes(data.mensajes)
           } else {
-            navigate('/*')
+            navigate('/*') // Redirigir a 404 si no existe
           }
         }
       })
       .catch(err => toast.error(err))
   }
 
- 
+  // Función para borrar un mensaje (propio o admin)
   const borrarMensaje = (id_mensaje) => {
     toast(
       (t) => (
@@ -44,21 +43,21 @@ export default function MostrarHilo() {
           <div className="flex gap-2 justify-end">
             <button
               onClick={() => {
-                toast.dismiss(t);
+                toast.dismiss(t)
                 fetch(`http://localhost:5000${user?.rol === 'admin' ? '/admin' : ''}/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
                   .then(res => res.json())
                   .then(data => {
                     if (data.deleted) {
-                      toast.success('Mensaje borrado con éxito');
-                      obtenerMensajes();
+                      toast.success('Mensaje borrado con éxito')
+                      obtenerMensajes()
                     } else {
-                      toast.error(data.message);
+                      toast.error(data.message)
                     }
                   })
                   .catch(err => {
-                    console.error(err);
-                    toast.error('Error al borrar el mensaje');
-                  });
+                    console.error(err)
+                    toast.error('Error al borrar el mensaje')
+                  })
               }}
               className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
             >
@@ -74,17 +73,20 @@ export default function MostrarHilo() {
         </div>
       ),
       { duration: Infinity }
-    );
+    )
   }
 
+  // Manejo de cambios en el formulario
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
 
+  // Marcar un mensaje para responder
   const responder = (msg) => {
     setRespuesta(msg)
   }
 
+  // Enviar mensaje al hilo
   const handleSubmit = (e) => {
     e.preventDefault()
     if (disabled) return
@@ -129,6 +131,7 @@ export default function MostrarHilo() {
       })
   }
 
+  // Scroll automático a hash en URL si existe
   useEffect(() => {
     if (location.hash) {
       const elementId = location.hash.replace("#", "")
@@ -139,6 +142,7 @@ export default function MostrarHilo() {
     }
   }, [location, mensajes])
 
+  // Cooldown de envío de mensajes
   useEffect(() => {
     if (contador > 0) {
       const interval = setInterval(() => {
@@ -151,13 +155,13 @@ export default function MostrarHilo() {
           return prev - 1
         })
       }, 1000)
-
       return () => clearInterval(interval)
     }
   }, [contador])
 
+  // Inicialización: cargar hilo, usuario y token CSRF
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'smooth' })
     obtenerMensajes()
 
     fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
@@ -172,6 +176,7 @@ export default function MostrarHilo() {
       .then(data => setCsrfToken(data.csrfToken))
   }, [page])
 
+  // Actualizar título del documento según título del hilo
   useEffect(() => {
     if (hilo.titulo) {
       document.title = hilo.titulo
@@ -195,9 +200,14 @@ export default function MostrarHilo() {
           </p>
         </div>
 
+        {/* Paginación */}
         <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 flex-wrap pb-6">
           {Array.from({ length: Math.ceil(hilo.mensajes / 39) }, (_, i) => i + 1).map((p, index) => (
-            <Link to={`/display_thread/${id_hilo}/page/${index + 1}`} key={index} className={`${Number(page) === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}>
+            <Link
+              key={index}
+              to={`/display_thread/${id_hilo}/page/${index + 1}`}
+              className={`${Number(page) === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+            >
               {p}
             </Link>
           ))}
@@ -206,15 +216,14 @@ export default function MostrarHilo() {
         {/* Lista de mensajes */}
         <div className="space-y-6">
           {mensajes.map((msg, index) => {
-
             const borderClass = msg.id_usuario === hilo.id_usuario ? 'border-l-4 border-blue-500' : ''
-
             return (
               <div
                 key={index}
                 id={`post${msg.id}`}
                 className={`scroll-mt-24 bg-white dark:bg-zinc-900 rounded-2xl shadow-lg p-6 flex flex-col gap-4 transition hover:shadow-2xl ${borderClass}`}
               >
+                {/* Encabezado del mensaje */}
                 <div className="flex items-center justify-between w-full">
                   <div className="flex items-center gap-4 flex-1">
                     <img
@@ -223,11 +232,20 @@ export default function MostrarHilo() {
                       alt="avatar"
                     />
                     <div className="flex flex-col md:flex-row md:items-center w-full">
-                      <a href={user?.id && user?.id === msg?.id_usuario ? '/profile' : `/usuario/${msg.id_usuario}`} target='_blank' className="font-semibold text-zinc-800 dark:text-zinc-200 break-words">{msg.username_mensaje}</a>
-                      <span className="text-sm text-zinc-500 dark:text-zinc-400 md:ml-auto">{msg.fecha} #{(Number(page)-1)*39+(index+1)}</span>
+                      <a
+                        href={user?.id && user?.id === msg?.id_usuario ? '/profile' : `/usuario/${msg.id_usuario}`}
+                        target='_blank'
+                        className="font-semibold text-zinc-800 dark:text-zinc-200 break-words"
+                      >
+                        {msg.username_mensaje}
+                      </a>
+                      <span className="text-sm text-zinc-500 dark:text-zinc-400 md:ml-auto">
+                        {msg.fecha} #{(Number(page)-1)*39+(index+1)}
+                      </span>
                     </div>
                   </div>
 
+                  {/* Botones borrar mensaje */}
                   {user && (user.id === msg.id_usuario || user.rol === 'admin') && (
                     <div className="flex gap-2 ml-4">
                       <button
@@ -238,25 +256,27 @@ export default function MostrarHilo() {
                       </button>
                     </div>
                   )}
-
                 </div>
 
+                {/* Mensaje respondido */}
                 {msg.id_mensaje_respuesta>0 && (
                   <div className="bg-gray-100 dark:bg-zinc-700/70 rounded p-3 max-h-32 overflow-auto border-l-4 border-blue-500">
                     <p className="font-semibold text-sm dark:text-zinc-200">
-                      {msg.username_mensaje_respuesta} 
-
-                      <a href={`${window.location.origin}/display_thread/${id_hilo}/page/${msg.page_mensaje_respuesta}#post${msg.id_mensaje_respuesta}`}><i class="fa-solid fa-share"></i></a>
-                    
+                      {msg.username_mensaje_respuesta}
+                      <a href={`${window.location.origin}/display_thread/${id_hilo}/page/${msg.page_mensaje_respuesta}#post${msg.id_mensaje_respuesta}`}>
+                        <i className="fa-solid fa-share"></i>
+                      </a>
                     </p>
                     <p className="text-sm break-words dark:text-zinc-200">{msg.contenido_mensaje_respuesta}</p>
                   </div>
                 )}
 
+                {/* Contenido del mensaje */}
                 <p className="text-zinc-700 dark:text-zinc-300 leading-relaxed w-full break-words whitespace-pre-wrap">
                   {msg.contenido}
                 </p>
 
+                {/* Botones de responder y copiar enlace */}
                 <div className="flex justify-end mt-2 gap-2">
                   {user && (
                     <button
@@ -282,20 +302,25 @@ export default function MostrarHilo() {
                   </button>
                 </div>
 
-
               </div>
             )
           })}
         </div>
 
+        {/* Paginación inferior */}
         <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 flex-wrap pb-6">
           {Array.from({ length: Math.ceil(hilo.mensajes / 39) }, (_, i) => i + 1).map((p, index) => (
-            <Link to={`/display_thread/${id_hilo}/page/${index + 1}`} key={index} className={`${Number(page) === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}>
+            <Link
+              to={`/display_thread/${id_hilo}/page/${index + 1}`}
+              key={index}
+              className={`${Number(page) === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+            >
               {p}
             </Link>
           ))}
         </div>
 
+        {/* Mensaje de respuesta fijado */}
         {respuesta && (
           <div className="fixed bottom-20 left-0 w-full flex justify-center">
             <div className="bg-white/80 dark:bg-zinc-800/80 backdrop-blur-md rounded-t p-4 shadow-md max-h-32 overflow-auto flex justify-between items-start w-full border-t-blue-500">
@@ -313,6 +338,7 @@ export default function MostrarHilo() {
           </div>
         )}
 
+        {/* Formulario para enviar mensaje */}
         {user && (
           <div className="fixed bottom-0 left-0 w-full flex justify-center">
             <form onSubmit={handleSubmit} className="flex items-center gap-3 p-4 bg-blue-900 shadow-lg w-full">

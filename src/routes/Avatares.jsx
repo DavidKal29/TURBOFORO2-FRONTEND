@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { useAppContext } from '../context/AppContext'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-import { toast } from 'sonner' //Para mostrar notificaciones
+import { useNavigate, Link } from 'react-router-dom'
+import { toast } from 'sonner' // notificaciones
 
 export default function Avatares() {
   const avatarCount = 24
@@ -10,22 +9,24 @@ export default function Avatares() {
   const { user, setUser } = useAppContext()
   const navigate = useNavigate()
 
-  const cambiarAvatar = (id_avatar)=>{
-    fetch('http://localhost:5000/editar_avatar',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        credentials:'include',
-        body: JSON.stringify({id_avatar: id_avatar})
+  // cambiar avatar
+  const cambiarAvatar = (id_avatar) => {
+    fetch('http://localhost:5000/editar_avatar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id_avatar: id_avatar })
     })
-    .then(res=>res.json())
-    .then(data=>{
+      .then(res => res.json())
+      .then(data => {
         toast.info(data.message)
         if (data.changed) {
-            navigate('/profile')
+          navigate('/profile')
         }
-    })
+      })
   }
 
+  // check login y título
   useEffect(() => {
     document.title = 'Change Avatars'
 
@@ -33,11 +34,11 @@ export default function Avatares() {
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) {
-          console.log('El usuario no está logueado')
+          console.log('Usuario no logueado')
           setUser(null)
           navigate('/login')
         } else {
-          console.log('El usuario está logueado')
+          console.log('Usuario logueado')
           setUser(data.user)
         }
       })
@@ -54,7 +55,7 @@ export default function Avatares() {
           const isSelected = user?.avatar === index + 1
           return (
             <button
-              onClick={()=>{cambiarAvatar(index+1)}}
+              onClick={() => { cambiarAvatar(index + 1) }}
               key={index}
               className={`relative group cursor-pointer w-40 h-40 rounded-full overflow-hidden shadow-2xl transform transition duration-300 ease-out ${
                 isSelected
@@ -67,8 +68,6 @@ export default function Avatares() {
                 alt={`Avatar ${index + 1}`}
                 className="w-full h-full object-cover"
               />
-
-              
             </button>
           )
         })}

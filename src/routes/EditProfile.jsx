@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
+import { toast } from 'sonner' // notificaciones
 
 export default function EditProfile() {
   const { user, setUser } = useAppContext()
@@ -9,13 +9,13 @@ export default function EditProfile() {
 
   const [csrfToken, setCsrfToken] = useState('')
   const [loading, setLoading] = useState(true)
-
   const [form, setForm] = useState({
     email: '',
     username: '',
     description: ''
   })
 
+  // manejar cambios del formulario
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -23,6 +23,7 @@ export default function EditProfile() {
     })
   }
 
+  // enviar formulario
   const handleSubmit = (e) => {
     e.preventDefault()
 
@@ -48,11 +49,8 @@ export default function EditProfile() {
           toast.success(data.message)
           navigate('/profile')
         } else {
-          if (data.error) {
-            toast.error(data.error.msg)
-          } else {
-            toast.error(data.message || 'Error al actualizar')
-          }
+          if (data.error) toast.error(data.error.msg)
+          else toast.error(data.message || 'Error al actualizar')
         }
       })
       .catch((err) => {
@@ -61,6 +59,7 @@ export default function EditProfile() {
       })
   }
 
+  // cargar datos iniciales y CSRF
   useEffect(() => {
     document.title = 'Edit Profile'
 
@@ -70,11 +69,11 @@ export default function EditProfile() {
     ])
       .then(([perfil, csrf]) => {
         if (!perfil.loggedIn) {
-          console.log('El usuario no está logueado')
+          console.log('Usuario no logueado')
           setUser(null)
           navigate('/login')
         } else {
-          console.log('El usuario está logueado')
+          console.log('Usuario logueado')
           setUser(perfil.user)
           setForm({
             email: perfil.user.email,
@@ -91,9 +90,7 @@ export default function EditProfile() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) {
-    return <div className="text-center py-20 text-white">Cargando...</div>
-  }
+  if (loading) return <div className="text-center py-20 text-white">Cargando...</div>
 
   return (
     <div className="flex py-[150px] justify-center items-center bg-gradient-to-r from-red-700 to-red-500 px-4">
@@ -149,7 +146,7 @@ export default function EditProfile() {
           />
         </div>
 
-        {/* Button */}
+        {/* Botón */}
         <button
           type="submit"
           className="cursor-pointer bg-gradient-to-r from-red-500 to-red-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"

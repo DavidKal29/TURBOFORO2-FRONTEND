@@ -22,7 +22,7 @@ export default function Home() {
       </div>
 
       {/* Contenido en columnas */}
-      <div className="flex flex-col md:flex-row-reverse md:gap-6">
+      <div className="flex flex-col lg:flex-row-reverse md:gap-6">
         <Populares></Populares>
         <Categorias></Categorias>
       </div>

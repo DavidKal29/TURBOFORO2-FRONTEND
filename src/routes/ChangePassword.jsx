@@ -26,7 +26,7 @@ export default function ChangePassword() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    fetch(`http://localhost:5000/cambiarPassword/${Parametros.token}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/cambiarPassword/${Parametros.token}`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
@@ -47,7 +47,7 @@ export default function ChangePassword() {
   useEffect(() => {
     document.title = 'Change Password'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) {
@@ -57,7 +57,7 @@ export default function ChangePassword() {
         } else console.log('Usuario no logueado')
       })
 
-    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => { setCsrfToken(data.csrfToken) })
 

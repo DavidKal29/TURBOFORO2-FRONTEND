@@ -12,7 +12,7 @@ export default function MisHilos() {
   // Obtener hilos del usuario
   const obtenerHilos = async () => {
     try {
-      const res = await fetch(`http://localhost:5000/mis_hilos/${page}`, { 
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/mis_hilos/${page}`, { 
         method: 'GET', credentials: 'include' 
       });
       const data = await res.json();
@@ -50,7 +50,7 @@ export default function MisHilos() {
   // Eliminar hilo
   const borrarHilo = async (id_hilo) => {
     try {
-      const res = await fetch(`http://localhost:5000/delete/${id_hilo}`, { 
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/delete/${id_hilo}`, { 
         method: 'GET', credentials: 'include' 
       });
       const data = await res.json();
@@ -74,7 +74,7 @@ export default function MisHilos() {
 
   // Comprobar usuario y obtener hilos
   useEffect(() => {
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) { setUser(null); navigate('/login'); }

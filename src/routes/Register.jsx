@@ -31,7 +31,7 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    fetch('http://localhost:5000/register', {
+    fetch(`${process.env.REACT_APP_API_URL}/register`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
@@ -65,7 +65,7 @@ export default function Register() {
     document.title = 'Register';
 
     // Verificar si el usuario ya está logueado
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) {
@@ -78,7 +78,7 @@ export default function Register() {
       });
 
     // Obtener CSRF token
-    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => { setCsrfToken(data.csrfToken); });
 

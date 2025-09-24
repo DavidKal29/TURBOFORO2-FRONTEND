@@ -19,7 +19,7 @@ export default function ForgotPassword() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    fetch('http://localhost:5000/recuperarPassword', {
+    fetch(`${process.env.REACT_APP_API_URL}/recuperarPassword`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
@@ -40,7 +40,7 @@ export default function ForgotPassword() {
   useEffect(() => {
     document.title = 'Forgot Password'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then((res) => res.json())
       .then((data) => {
         if (data.loggedIn) {
@@ -52,7 +52,7 @@ export default function ForgotPassword() {
         }
       })
 
-    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then((res) => res.json())
       .then((data) => setCsrfToken(data.csrfToken))
   }, [])

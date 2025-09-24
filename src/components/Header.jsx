@@ -8,7 +8,7 @@ export default function Header() {
 
   // Función para cerrar sesión
   const logout = () => {
-    fetch("http://localhost:5000/logout", { credentials: "include", method: "GET" })
+    fetch(`${process.env.REACT_APP_API_URL}/logout`, { credentials: "include", method: "GET" })
       .then(res => res.json())
       .then(data => {
         if (data.loggedOut) {
@@ -23,7 +23,7 @@ export default function Header() {
 
   // Verificamos si el usuario está logueado al cargar el componente
   useEffect(() => {
-    fetch("http://localhost:5000/perfil", { credentials: "include", method: "GET" })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: "include", method: "GET" })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) {

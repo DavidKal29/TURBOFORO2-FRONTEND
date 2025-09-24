@@ -20,7 +20,7 @@ export default function Usuario() {
             <button
               onClick={() => {
                 toast.dismiss(t);
-                fetch(`http://localhost:5000/admin/delete_user/${id_usuario}`, { method: 'GET', credentials: 'include' })
+                fetch(`${process.env.REACT_APP_API_URL}/admin/delete_user/${id_usuario}`, { method: 'GET', credentials: 'include' })
                   .then(res => res.json())
                   .then(data => {
                     if (data.deleted) {
@@ -57,7 +57,7 @@ export default function Usuario() {
     document.title = 'Usuario'
 
     // Verificar si el usuario logueado sigue activo
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) setUser(null)
@@ -65,7 +65,7 @@ export default function Usuario() {
       })
 
     // Obtener datos del usuario cuyo perfil se está viendo
-    fetch(`http://localhost:5000/usuario/${id_usuario}`, { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/usuario/${id_usuario}`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.user_data) {

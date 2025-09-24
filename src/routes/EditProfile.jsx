@@ -34,7 +34,7 @@ export default function EditProfile() {
 
     console.log('Enviando datos:', form, 'CSRF:', csrfToken)
 
-    fetch('http://localhost:5000/editar_perfil', {
+    fetch(`${process.env.REACT_APP_API_URL}/editar_perfil`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
@@ -64,8 +64,8 @@ export default function EditProfile() {
     document.title = 'Edit Profile'
 
     Promise.all([
-      fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' }).then((res) => res.json()),
-      fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' }).then((res) => res.json())
+      fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' }).then((res) => res.json()),
+      fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' }).then((res) => res.json())
     ])
       .then(([perfil, csrf]) => {
         if (!perfil.loggedIn) {

@@ -7,7 +7,7 @@ export default function Footer() {
 
   // Función para cerrar sesión
   const logout = () => {
-    fetch("http://localhost:5000/logout", { credentials: "include", method: "GET" })
+    fetch(`${process.env.REACT_APP_API_URL}/logout`, { credentials: "include", method: "GET" })
       .then(res => res.json())
       .then(data => {
         if (data.loggedOut) {

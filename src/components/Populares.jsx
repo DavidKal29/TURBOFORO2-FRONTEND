@@ -6,7 +6,7 @@ export default function Populares() {
 
   // traer hilos y stats al cargar
   useEffect(() => {
-    fetch('http://localhost:5000/home', { method: 'GET', credentials: 'include' })
+    fetch(`${process.env.REACT_APP_API_URL}/home`, { method: 'GET', credentials: 'include' })
       .then(res => res.json())
       .then(data => {
         if (data) {

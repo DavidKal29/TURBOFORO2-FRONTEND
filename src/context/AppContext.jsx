@@ -8,7 +8,7 @@ export function AppProvider({ children }) {
 
   // check si el usuario está logueado al inicio
   useEffect(() => {
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) {

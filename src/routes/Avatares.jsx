@@ -11,7 +11,7 @@ export default function Avatares() {
 
   // cambiar avatar
   const cambiarAvatar = (id_avatar) => {
-    fetch('http://localhost:5000/editar_avatar', {
+    fetch(`${process.env.REACT_APP_API_URL}/editar_avatar`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -30,7 +30,7 @@ export default function Avatares() {
   useEffect(() => {
     document.title = 'Change Avatars'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) {

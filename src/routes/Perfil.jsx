@@ -9,7 +9,7 @@ export default function Perfil() {
 
   // Enviar correo de verificación
   const verificarCorreo = () => {
-    fetch('http://localhost:5000/enviar_verificacion', {
+    fetch(`${process.env.REACT_APP_API_URL}/enviar_verificacion`, {
       method:'POST',
       headers:{'Content-Type': 'application/json'},
       body: JSON.stringify({ email: user?.email || null }),
@@ -22,7 +22,7 @@ export default function Perfil() {
 
   // Logout
   const logout = () => {
-    fetch('http://localhost:5000/logout', { credentials:'include', method:'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/logout`, { credentials:'include', method:'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.loggedOut) {
@@ -41,7 +41,7 @@ export default function Perfil() {
           <button
             onClick={() => {
               toast.dismiss(t)
-              fetch('http://localhost:5000/borrar_cuenta', { method:'GET', credentials:'include' })
+              fetch(`${process.env.REACT_APP_API_URL}/borrar_cuenta`, { method:'GET', credentials:'include' })
                 .then(res => res.json())
                 .then(data => {
                   if (data.deleted) {
@@ -69,7 +69,7 @@ export default function Perfil() {
   useEffect(() => {
     document.title = 'Perfil'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) {

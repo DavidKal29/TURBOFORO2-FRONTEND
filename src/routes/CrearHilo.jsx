@@ -30,7 +30,7 @@ export default function CrearHilo() {
     e.preventDefault()
     if (disabled) return
 
-    fetch('http://localhost:5000/crearHilo', {
+    fetch(`${process.env.REACT_APP_API_URL}/crearHilo`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
@@ -84,7 +84,7 @@ export default function CrearHilo() {
   useEffect(() => {
     document.title = 'Create Thread'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) {
@@ -93,13 +93,13 @@ export default function CrearHilo() {
         } else setUser(data.user)
       })
 
-    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => { setCsrfToken(data.csrfToken) })
 
     const obtenerCategorias = async () => {
       try {
-        const res = await fetch('http://localhost:5000/categorias', { method: 'GET', credentials: 'include' })
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/categorias`, { method: 'GET', credentials: 'include' })
         const data = await res.json()
         setCategorias(data.categorias)
       } catch (error) {

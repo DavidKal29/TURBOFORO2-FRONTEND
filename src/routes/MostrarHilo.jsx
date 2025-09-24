@@ -19,7 +19,7 @@ export default function MostrarHilo() {
 
   // Función para obtener mensajes del hilo
   const obtenerMensajes = () => {
-    fetch(`http://localhost:5000/hilo/${id_hilo}/${page}`, { method: 'GET', credentials: 'include' })
+    fetch(`${process.env.REACT_APP_API_URL}/hilo/${id_hilo}/${page}`, { method: 'GET', credentials: 'include' })
       .then(res => res.json())
       .then(data => {
         if (data) {
@@ -44,7 +44,7 @@ export default function MostrarHilo() {
             <button
               onClick={() => {
                 toast.dismiss(t)
-                fetch(`http://localhost:5000${user?.rol === 'admin' ? '/admin' : ''}/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
+                fetch(`${process.env.REACT_APP_API_URL}${user?.rol === 'admin' ? '/admin' : ''}/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
                   .then(res => res.json())
                   .then(data => {
                     if (data.deleted) {
@@ -95,7 +95,7 @@ export default function MostrarHilo() {
     const body = { ...form }
     if (respuesta) body.id_mensaje_respuesta = respuesta.id
 
-    fetch(`http://localhost:5000/hilo/${id_hilo}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/hilo/${id_hilo}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'CSRF-Token': csrfToken },
       credentials: 'include',
@@ -164,14 +164,14 @@ export default function MostrarHilo() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
     obtenerMensajes()
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) setUser(null)
         else setUser(data.user)
       })
 
-    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
   }, [page])

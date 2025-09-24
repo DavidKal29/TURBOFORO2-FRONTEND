@@ -17,7 +17,7 @@ export default function Categoria() {
   const obtenerHilos = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/hilos/${encontrado.id}/${page}`,
+        `${process.env.REACT_APP_API_URL}/hilos/${encontrado.id}/${page}`,
         { method: 'GET', credentials: 'include' }
       );
       const data = await res.json();
@@ -61,7 +61,7 @@ export default function Categoria() {
   const borrarHilo = async (id_hilo) => {
     try {
       const res = await fetch(
-        `http://localhost:5000/admin/delete/${id_hilo}`,
+        `${process.env.REACT_APP_API_URL}/admin/delete/${id_hilo}`,
         { method: 'GET', credentials: 'include' }
       );
       const data = await res.json();
@@ -81,7 +81,7 @@ export default function Categoria() {
   useEffect(() => {
     const obtenerCategorias = async () => {
       try {
-        const res = await fetch('http://localhost:5000/categorias', { method: 'GET', credentials: 'include' });
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/categorias`, { method: 'GET', credentials: 'include' });
         const data = await res.json();
         if (data.categorias) setCategorias(data.categorias);
         else navigate('/');
@@ -104,7 +104,7 @@ export default function Categoria() {
   useEffect(() => {
     if (!encontrado) return;
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (!data.loggedIn) setUser(null);

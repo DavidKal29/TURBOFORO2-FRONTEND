@@ -17,7 +17,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault()
 
-    fetch('http://localhost:5000/login', {
+    fetch(`${process.env.REACT_APP_API_URL}/login`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
@@ -38,7 +38,7 @@ export default function Login() {
   useEffect(() => {
     document.title = 'Login'
 
-    fetch('http://localhost:5000/perfil', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => {
         if (data.loggedIn) {
@@ -47,7 +47,7 @@ export default function Login() {
         }
       })
 
-    fetch('http://localhost:5000/csrf-token', { credentials: 'include', method: 'GET' })
+    fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
       .then(data => setCsrfToken(data.csrfToken))
   }, [])

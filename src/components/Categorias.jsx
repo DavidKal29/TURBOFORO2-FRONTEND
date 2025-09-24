@@ -10,7 +10,7 @@ export default function Categorias() {
     // Función para obtener las categorías desde el backend
     const obtenerCategorias = async () => {
       try {
-        const res = await fetch("http://localhost:5000/categorias", {
+        const res = await fetch(`${process.env.REACT_APP_API_URL}/categorias`, {
           method: "GET",
           credentials: "include",
         });

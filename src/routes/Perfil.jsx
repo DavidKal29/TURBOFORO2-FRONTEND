@@ -140,20 +140,20 @@ export default function Perfil() {
             {/* Botones */}
             <div className={`grid grid-cols-1 ${user?.verificado ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} lg:grid-cols-4 gap-4`}>
               <Link to="/edit_profile">
-                <button className="w-full bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">Editar Perfil</button>
+                <button className="cursor-pointer w-full bg-gradient-to-r from-green-700 to-green-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">Editar Perfil</button>
               </Link>
 
               {!user?.verificado && (
-                <button onClick={verificarCorreo} className="w-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
+                <button onClick={verificarCorreo} className="cursor-pointer w-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
                   Verificar Email
                 </button>
               )}
 
               <Link to="/my_threads/page/1">
-                <button className="w-full bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">Mis hilos</button>
+                <button className="cursor-pointer w-full bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">Mis hilos</button>
               </Link>
 
-              <button onClick={borrarCuenta} className="w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
+              <button onClick={borrarCuenta} className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
                 Borrar Cuenta
               </button>
             </div>

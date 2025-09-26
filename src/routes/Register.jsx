@@ -31,14 +31,19 @@ export default function Register() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const cabeceras = {
+        'Content-Type': 'application/json',
+        'CSRF-Token': csrfToken
+      }
+
+    console.log('Las cabeceras:',cabeceras);
+    
+
     fetch(`${process.env.REACT_APP_API_URL}/register`, {
       credentials: 'include',
       method: 'POST',
       body: JSON.stringify(form),
-      headers: {
-        'Content-Type': 'application/json',
-        'CSRF-Token': csrfToken
-      }
+      headers: cabeceras
     })
       .then(res => res.json())
       .then(data => {
@@ -52,11 +57,23 @@ export default function Register() {
             toast.error(data.error.msg);
           } else {
             toast.error(data.message);
+            console.log('El errorcillo es el squiente:');
+            console.log(data.message);
+            
+          }
+
+          if (data.horror) {
+            console.log('Ha sucedido un error perturbador:',data.horror);
+            
           }
         }
       })
       .catch(err => {
         toast.error('Error al enviar datos');
+        console.log('Ha habido error de aprte del frontend');
+        console.log(err);
+        
+        
       });
   };
 
@@ -80,7 +97,14 @@ export default function Register() {
     // Obtener CSRF token
     fetch(`${process.env.REACT_APP_API_URL}/csrf-token`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
-      .then(data => { setCsrfToken(data.csrfToken); });
+      .then(data => {
+         setCsrfToken(data.csrfToken); 
+         console.log('El CSRF TOKEN ha sido pedido');
+         console.log('El csrf token:');
+         console.log(data.csrfToken);
+         console.log(csrfToken);
+         
+      });
 
   }, [navigate, setUser]);
 

@@ -44,7 +44,7 @@ function App() {
         <Route path='/display_thread/:id_hilo/page/:page' element={<MostrarHilo></MostrarHilo>}></Route>
         <Route path='/my_threads/page/:page' element={<MisHilos></MisHilos>}></Route>
         <Route path='/usuario/:id_usuario' element={<Usuario></Usuario>}></Route>
-        <Route path='/usuarios' element={<Usuarios></Usuarios>}></Route>
+        <Route path='/usuarios/:page' element={<Usuarios></Usuarios>}></Route>
         <Route path='*' element={<Page404></Page404>}></Route>
       </Routes>
 

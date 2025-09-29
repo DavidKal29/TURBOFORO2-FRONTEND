@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { toast } from 'sonner'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useParams } from 'react-router-dom'
 
 export default function Usuarios() {
     const [users,setUsers] = useState([])
     const {user,setUser} = useAppContext()
+    const [counter,setCounter] = useState(0)
+    const page = Number(useParams().page) || 1
     const navigate = useNavigate()
 
     // Función para borrar un usuario (solo admins)
@@ -53,6 +55,13 @@ export default function Usuarios() {
     useEffect(()=>{
         document.title = 'Usuarios Registrados'
 
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    },[page])
+
+
+    useEffect(()=>{
+
         fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
             .then(res => res.json())
             .then(data => {
@@ -62,22 +71,29 @@ export default function Usuarios() {
                 } else setUser(data.user)
         })
 
-        
 
-    },[])
-
-    useEffect(()=>{
-        fetch(`${process.env.REACT_APP_API_URL}/admin/users`, {credentials:'include',method:'GET'})
+        fetch(`${process.env.REACT_APP_API_URL}/admin/users_counter`, {credentials:'include',method:'GET'})
         .then(res=>res.json())
         .then(data=>{
             if (data.message) {
-                toast.error(data.message)
-                navigate('/')
+                navigate('/*')
+            }else{
+                setCounter(data.counter)
+            }
+        })
+    },[])
+
+    useEffect(()=>{
+        fetch(`${process.env.REACT_APP_API_URL}/admin/users/${page}`, {credentials:'include',method:'GET'})
+        .then(res=>res.json())
+        .then(data=>{
+            if (data.message) {
+                navigate('/*')
             }else{
                 setUsers(data.users)
             }
         })
-    },[])
+    },[page])
 
 
 
@@ -85,10 +101,23 @@ export default function Usuarios() {
     <div className='py-[120px] flex flex-col justify-center items-center bg-gray-200'>
         <h1 className='font-extrabold text-3xl md:text-4xl text-left mb-4 text-gray-800'>Usuarios Registrados</h1>
 
+        {/* Paginación */}
+        <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap pb-6">
+            {Array.from({ length: Math.ceil((counter || 0) / 20) }, (_, i) => i + 1).map((p, index) => (
+                <Link
+                    to={`/usuarios/${p}`}
+                    key={index}
+                    className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+                >
+                    {p}
+                </Link>
+            ))}
+        </div>
+
         <div class="w-full px-4 py-8 flex flex-col items-center text-white">
-            <div class="overflow-x-auto w-full max-w-[1250px] rounded scrollbar-hide">
+            <div class="overflow-x-auto w-full max-w-[1100px] rounded scrollbar-hide">
                 <table class="w-full whitespace-nowrap border-none">
-                    <thead class="text-white bg-[#C40C0C]">
+                    <thead class="text-white bg-blue-800">
                         <tr>
                         <th class="px-4 py-3 text-[20px] md:text-[25px] font-bold text-center">Foto</th>
                         <th class="px-4 py-3 text-[20px] md:text-[25px] font-bold text-center">ID</th>
@@ -117,10 +146,9 @@ export default function Usuarios() {
                                     
                                     <td class="px-4 py-3 text-[16px] md:text-[18px] font-semibold text-center">
                                         <div class="flex justify-center gap-4">
-                                            <a href={`/usuario/${user.id}`} target='_blank' class="cursor-pointer text-center bg-green-800 px-3 py-1 rounded text-[15px]">Ver Perfil</a>
-                                            <a href="/" class="cursor-pointer text-center bg-blue-800 px-3 py-1 rounded text-[15px]">Hilos</a>
-                                            <a href="/" class="cursor-pointer text-center bg-yellow-600 px-3 py-1 rounded text-[15px]">Mensajes</a>
-                                            <button onClick={()=>{borrarUsuario(user.id)}} class="cursor-pointer text-center bg-red-600 px-3 py-1 rounded text-[15px]">Eliminar</button>
+                                            <a href={`/usuario/${user.id}`} target='_blank' class="cursor-pointer text-center bg-green-800 px-4 py-2 rounded text-[15px]">Ver Perfil</a>
+
+                                            <button onClick={()=>{borrarUsuario(user.id)}} class="cursor-pointer text-center bg-red-600 px-4 py-2 rounded text-[15px]">Eliminar</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -131,6 +159,19 @@ export default function Usuarios() {
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        {/* Paginación */}
+        <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap pb-6">
+            {Array.from({ length: Math.ceil((counter || 0) / 20) }, (_, i) => i + 1).map((p, index) => (
+                <Link
+                    to={`/usuarios/${p}`}
+                    key={index}
+                    className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+                >
+                    {p}
+                </Link>
+            ))}
         </div>
 
 

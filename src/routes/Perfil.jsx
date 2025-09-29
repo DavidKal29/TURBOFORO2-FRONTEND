@@ -149,9 +149,11 @@ export default function Perfil() {
                 </button>
               )}
 
-              <Link to="/my_threads/page/1">
-                <button className="cursor-pointer w-full bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">Mis hilos</button>
-              </Link>
+              {user?.rol === 'admin' ? (
+                <Link to='/usuarios/1' className="cursor-pointer w-full bg-gradient-to-r from-orange-700 to-orange-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base text-center">
+                  Usuarios
+                </Link>
+              ) : (<></>)}
 
               <button onClick={borrarCuenta} className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
                 Borrar Cuenta
@@ -168,10 +170,10 @@ export default function Perfil() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <div className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
+          <Link to='/my_threads/page/1' className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Hilos</h3>
             <p className="text-3xl font-extrabold text-indigo-600 mt-2">{user?.hilos || 0}</p>
-          </div>
+          </Link>
           <div className="bg-teal-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Mensajes</h3>
             <p className="text-3xl font-extrabold text-teal-600 mt-2">{user?.mensajes || 0}</p>

@@ -93,7 +93,7 @@ export default function MostrarHilo() {
             <button
               onClick={() => {
                 toast.dismiss(t)
-                fetch(`${process.env.REACT_APP_API_URL}${user?.rol === 'admin' ? '/admin' : ''}/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
+                fetch(`${process.env.REACT_APP_API_URL}/delete_message/${id_mensaje}`, { method: 'GET', credentials: 'include' })
                   .then(res => res.json())
                   .then(data => {
                     if (data.deleted) {

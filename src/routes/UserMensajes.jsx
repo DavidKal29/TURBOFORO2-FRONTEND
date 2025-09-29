@@ -73,7 +73,7 @@ export default function UserMensajes() {
   // Scroll arriba y título
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.title = 'Mis mensajes';
+    document.title = 'Mensajes';
   }, []);
 
   useEffect(() => {
@@ -133,13 +133,13 @@ export default function UserMensajes() {
       {/* Paginación */}
       <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap">
         {Array.from({ length: Math.ceil((counter || 0) / 39) }, (_, i) => i + 1).map((p, index) => (
-          <Link
-            to={`/user_messages/${id_user}/page/${p}`}
+          <a
+            href={`/user_messages/${id_user}/page/${p}`}
             key={index}
             className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
           >
             {p}
-          </Link>
+          </a>
         ))}
       </div>
 
@@ -186,13 +186,13 @@ export default function UserMensajes() {
       {/* Paginación */}
       <div className="flex justify-center items-center gap-2 lg:mt-6 gap-4 flex-wrap pb-4">
         {Array.from({ length: Math.ceil((counter || 0) / 39) }, (_, i) => i + 1).map((p, index) => (
-          <Link
-            to={`/my_messages/page/${p}`}
+          <a
+            href={`/user_messages/${id_user}/page/${p}`}
             key={index}
             className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
           >
             {p}
-          </Link>
+          </a>
         ))}
       </div>
     </div>

@@ -61,7 +61,7 @@ export default function Categoria() {
   const borrarHilo = async (id_hilo) => {
     try {
       const res = await fetch(
-        `${process.env.REACT_APP_API_URL}/admin/delete/${id_hilo}`,
+        `${process.env.REACT_APP_API_URL}/delete_thread/${id_hilo}`,
         { method: 'GET', credentials: 'include' }
       );
       const data = await res.json();

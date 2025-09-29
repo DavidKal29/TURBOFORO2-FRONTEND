@@ -55,7 +55,7 @@ export default function UserHilos() {
   // Eliminar hilo
   const borrarHilo = async (id_hilo) => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/delete/${id_hilo}`, { 
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/delete_thread/${id_hilo}`, { 
         method: 'GET', credentials: 'include' 
       });
       const data = await res.json();
@@ -74,7 +74,7 @@ export default function UserHilos() {
   // Scroll arriba y título
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-    document.title = 'Mis hilos';
+    document.title = 'Hilos';
   }, []);
 
   useEffect(() => {

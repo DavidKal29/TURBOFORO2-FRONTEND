@@ -170,7 +170,7 @@ export default function Perfil() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <Link to='/my_threads/page/1' className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
+          <Link to={user?.hilos>0  ? `/user_threads/${user?.id}/page/1` : ''} className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Hilos</h3>
             <p className="text-3xl font-extrabold text-indigo-600 mt-2">{user?.hilos || 0}</p>
           </Link>

@@ -3,23 +3,28 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { toast } from "sonner";
 
-export default function MisHilos() {
+export default function UserHilos() {
   const [hilos, setHilos] = useState([]);
+  const [counter,setCounter] = useState(0)
   const { user, setUser } = useAppContext();
   const navigate = useNavigate();
-  const page = Number(useParams().page);
+  const page = Number(useParams().page) || 0
+  const id_user = Number(useParams().id_user) || 0
 
   // Obtener hilos del usuario
   const obtenerHilos = async () => {
     try {
-      const res = await fetch(`${process.env.REACT_APP_API_URL}/mis_hilos/${page}`, { 
+      const res = await fetch(`${process.env.REACT_APP_API_URL}/user_hilos/${id_user}/${page}`, { 
         method: 'GET', credentials: 'include' 
       });
       const data = await res.json();
-      if (data.hilos) setHilos(data.hilos);
-      else navigate('/profile');
+      if (data.hilos) {
+        setHilos(data.hilos)
+      }
+      
     } catch (error) {
       setHilos([]);
+      navigate('/*')
       console.error(error);
     }
   };
@@ -72,7 +77,24 @@ export default function MisHilos() {
     document.title = 'Mis hilos';
   }, []);
 
-  // Comprobar usuario y obtener hilos
+  useEffect(() => {
+    
+    fetch(`${process.env.REACT_APP_API_URL}/counter_hilos/${id_user}`, { credentials: 'include', method: 'GET' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.counter) {
+          setCounter(data.counter)
+        }else{
+          navigate('/*')
+        }
+      });
+  
+  
+  }, []);
+
+
+
+  // Comprobar usuario
   useEffect(() => {
     fetch(`${process.env.REACT_APP_API_URL}/perfil`, { credentials: 'include', method: 'GET' })
       .then(res => res.json())
@@ -90,7 +112,7 @@ export default function MisHilos() {
       <div className="flex flex-col justify-center items-center min-h-screen bg-gradient-to-r from-blue-600 to-blue-800 text-white px-6">
         <h1 className="text-[120px] font-extrabold drop-shadow-lg text-center">404</h1>
         <h2 className="text-3xl md:text-4xl font-bold mb-4 text-center">
-          Debes crear un hilo para ver tus hilos aquí
+          No hay hilos asociados a esta ruta
         </h2>
         <p className="text-lg text-blue-100 max-w-lg text-center mb-8">
           Parece que la página que buscas no existe o fue movida.
@@ -110,11 +132,21 @@ export default function MisHilos() {
     <div className="min-h-screen bg-gray-100 mt-[80px]">
       <div className="relative bg-gradient-to-r from-blue-500 to-purple-600 py-20 text-center text-white">
         <i className="fa-solid fa-earth text-6xl drop-shadow-lg"></i>
-        <h1 className="mt-6 font-extrabold text-5xl md:text-7xl drop-shadow-lg">Mis Hilos</h1>
-        <h1 className="mt-6 font-extrabold text-5xl md:text-7xl drop-shadow-lg">Página: {page}</h1>
-        <p className="mt-4 text-lg opacity-90 text-center">
-          Aquí podrás ver y eliminar tus propios hilos
-        </p>
+        <h1 className="mt-6 font-extrabold text-[35px] drop-shadow-lg">Hilos de {hilos[0].username}</h1>
+        <h1 className="mt-6 font-extrabold text-[35px] drop-shadow-lg">Página: {page}</h1>
+      </div>
+
+      {/* Paginación */}
+      <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap">
+        {Array.from({ length: Math.ceil((counter || 0) / 39) }, (_, i) => i + 1).map((p, index) => (
+          <Link
+            to={`/user_threads/${id_user}/page/${p}`}
+            key={index}
+            className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+          >
+            {p}
+          </Link>
+        ))}
       </div>
 
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -143,12 +175,14 @@ export default function MisHilos() {
                   >
                     Ver hilo
                   </a>
-                  <button
+                  {
+                    user?.rol === 'admin' || user?.id === id_user ? (<button
                     onClick={() => confirmDelete(hilo.id)}
                     className="cursor-pointer bg-red-500 text-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:scale-105 transition-transform"
                   >
                     Eliminar
-                  </button>
+                  </button>) : (<></>)
+                  }
                 </div>
               </div>
             </div>
@@ -157,8 +191,8 @@ export default function MisHilos() {
       </div>
 
       {/* Paginación */}
-      <div className="flex justify-center items-center gap-2 mt-4 lg:mt-6 gap-4 flex-wrap pb-6">
-        {Array.from({ length: Math.ceil((user?.hilos || 0) / 39) }, (_, i) => i + 1).map((p, index) => (
+      <div className="flex justify-center items-center gap-2 lg:mt-6 gap-4 flex-wrap pb-4">
+        {Array.from({ length: Math.ceil((counter || 0) / 39) }, (_, i) => i + 1).map((p, index) => (
           <Link
             to={`/my_threads/page/${p}`}
             key={index}

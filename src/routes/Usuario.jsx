@@ -162,12 +162,12 @@ export default function Usuario() {
 
         {/* Stats: Hilos, Mensajes, Fecha de registro */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
-          <div className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
+          <Link to={userData?.hilos>0  ? `/user_threads/${id_usuario}/page/1` : ''} className="bg-indigo-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Hilos</h3>
             <p className="text-3xl font-extrabold text-indigo-600 mt-2">
               {userData?.hilos || 0}
             </p>
-          </div>
+          </Link>
           <div className="bg-teal-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Mensajes</h3>
             <p className="text-3xl font-extrabold text-teal-600 mt-2">

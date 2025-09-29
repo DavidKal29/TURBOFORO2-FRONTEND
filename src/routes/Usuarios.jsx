@@ -7,7 +7,7 @@ export default function Usuarios() {
     const [users,setUsers] = useState([])
     const {user,setUser} = useAppContext()
     const [counter,setCounter] = useState(0)
-    const page = Number(useParams().page) || 1
+    const page = Number(useParams().page) || 0
     const navigate = useNavigate()
 
     // Función para borrar un usuario (solo admins)

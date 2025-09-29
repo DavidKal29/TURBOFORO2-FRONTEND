@@ -174,10 +174,10 @@ export default function Perfil() {
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Hilos</h3>
             <p className="text-3xl font-extrabold text-indigo-600 mt-2">{user?.hilos || 0}</p>
           </Link>
-          <div className="bg-teal-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
+          <Link to={user?.mensajes>0  ? `/user_messages/${user?.id}/page/1` : ''} className="bg-teal-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Mensajes</h3>
             <p className="text-3xl font-extrabold text-teal-600 mt-2">{user?.mensajes || 0}</p>
-          </div>
+          </Link>
           <div className="bg-pink-50 rounded-xl p-6 shadow-md hover:shadow-lg transition">
             <h3 className="text-sm font-semibold text-gray-600 uppercase">Miembro desde</h3>
             <p className="text-lg font-medium text-pink-600 mt-2">{user?.fecha_registro}</p>

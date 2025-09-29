@@ -22,6 +22,7 @@ import MostrarHilo from './routes/MostrarHilo';
 import Usuario from './routes/Usuario';
 import Usuarios from './routes/Usuarios';
 import UserHilos from './routes/UserHilos';
+import UserMensajes from './routes/UserMensajes';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
         <Route path='/crear_hilo' element={<CrearHilo></CrearHilo>}></Route>
         <Route path='/display_thread/:id_hilo/page/:page' element={<MostrarHilo></MostrarHilo>}></Route>
         <Route path='/user_threads/:id_user/page/:page' element={<UserHilos></UserHilos>}></Route>
+        <Route path='/user_messages/:id_user/page/:page' element={<UserMensajes></UserMensajes>}></Route>
         <Route path='/usuario/:id_usuario' element={<Usuario></Usuario>}></Route>
         <Route path='/usuarios/:page' element={<Usuarios></Usuarios>}></Route>
         <Route path='*' element={<Page404></Page404>}></Route>

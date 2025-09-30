@@ -53,11 +53,11 @@ export default function Perfil() {
                 })
                 .catch(() => toast.error('Error al borrar la cuenta'))
             }}
-            className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+            className="bg-red-600 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-red-700"
           >
             Sí, borrar
           </button>
-          <button onClick={() => toast.dismiss(t)} className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300">
+          <button onClick={() => toast.dismiss(t)} className="bg-gray-200 cursor-pointer px-3 py-1 rounded-lg hover:bg-gray-300">
             Cancelar
           </button>
         </div>

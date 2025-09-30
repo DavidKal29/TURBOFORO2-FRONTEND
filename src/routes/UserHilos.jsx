@@ -142,7 +142,7 @@ export default function UserHilos() {
           <Link
             to={`/user_threads/${id_user}/page/${p}`}
             key={index}
-            className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+            className={`${page === p ? 'bg-blue-500' : 'bg-indigo-900'} text-white px-4 py-2 rounded-xl font-bold hover:scale-105 transition`}
           >
             {p}
           </Link>
@@ -196,7 +196,7 @@ export default function UserHilos() {
           <Link
             to={`/my_threads/page/${p}`}
             key={index}
-            className={`${page === p ? 'bg-indigo-900' : 'bg-blue-500'} text-white px-3 py-2 sm:px-5 sm:py-3 rounded-[5px] font-bold`}
+            className={`${page === p ? 'bg-blue-500' : 'bg-indigo-900'} text-white px-4 py-2 rounded-xl font-bold hover:scale-105 transition`}
           >
             {p}
           </Link>

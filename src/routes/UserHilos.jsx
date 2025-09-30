@@ -37,13 +37,13 @@ export default function UserHilos() {
         <div className="flex gap-2 justify-end">
           <button
             onClick={() => { toast.dismiss(t); borrarHilo(id_hilo); }}
-            className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+            className="bg-red-600 cursor-pointer text-white px-3 py-1 rounded-lg hover:bg-red-700"
           >
             Sí, eliminar
           </button>
           <button
             onClick={() => toast.dismiss(t)}
-            className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300"
+            className="bg-gray-200 cursor-pointer px-3 py-1 rounded-lg hover:bg-gray-300"
           >
             Cancelar
           </button>

@@ -10,48 +10,6 @@ export default function Usuario() {
   const { id_usuario } = useParams() // ID del usuario desde la URL
   const { user, setUser } = useAppContext() // Usuario logueado actual
 
-  // Función para borrar un usuario (solo admins)
-  const borrarUsuario = (id_usuario) => {
-    toast(
-      (t) => (
-        <div className="flex flex-col gap-2">
-          <p>¿Seguro que quieres borrar a este usuario? Esta acción no se puede deshacer.</p>
-          <div className="flex gap-2 justify-end">
-            <button
-              onClick={() => {
-                toast.dismiss(t);
-                fetch(`${process.env.REACT_APP_API_URL}/admin/delete_user/${id_usuario}`, { method: 'GET', credentials: 'include' })
-                  .then(res => res.json())
-                  .then(data => {
-                    if (data.deleted) {
-                      toast.success('Usuario borrado con éxito');
-                      navigate('/')
-                    } else {
-                      toast.error(data.message);
-                    }
-                  })
-                  .catch(err => {
-                    console.error(err);
-                    toast.error('Error al borrar el usuario');
-                  });
-              }}
-              className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
-            >
-              Sí, borrar
-            </button>
-            <button
-              onClick={() => toast.dismiss(t)}
-              className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      ),
-      { duration: Infinity }
-    )
-  }
-
   // useEffect para obtener datos del usuario y del usuario logueado
   useEffect(() => {
     document.title = 'Usuario'

@@ -108,13 +108,13 @@ export default function MostrarHilo() {
                     toast.error('Error al borrar el mensaje')
                   })
               }}
-              className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700"
+              className="bg-red-600 text-white px-3 py-1 rounded-lg hover:bg-red-700 cursor-pointer"
             >
               Sí, borrar
             </button>
             <button
               onClick={() => toast.dismiss(t)}
-              className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300"
+              className="bg-gray-200 px-3 py-1 rounded-lg hover:bg-gray-300 cursor-pointer"
             >
               Cancelar
             </button>
@@ -290,7 +290,7 @@ export default function MostrarHilo() {
                   {user && (user.id === msg.id_usuario || user.rol === 'admin') && (
                     <button
                       onClick={() => borrarMensaje(msg.id)}
-                      className="p-2 rounded-lg bg-red-600 text-white shadow-md hover:bg-red-700"
+                      className="p-2 cursor-pointer rounded-lg bg-red-600 text-white shadow-md hover:bg-red-700"
                     >
                       <i className="fa-solid fa-trash"></i>
                     </button>
@@ -320,7 +320,7 @@ export default function MostrarHilo() {
                   {user && (
                     <button
                       onClick={() => responder(msg)}
-                      className={`px-4 py-2 bg-gradient-to-r ${tema?.button} text-white font-semibold rounded-xl shadow-md hover:scale-105 transition flex items-center gap-2`}
+                      className={`px-4 cursor-pointer py-2 bg-gradient-to-r ${tema?.button} text-white font-semibold rounded-xl shadow-md hover:scale-105 transition flex items-center gap-2`}
                     >
                       <i className="fa-solid fa-reply"></i>
                       Responder
@@ -333,7 +333,7 @@ export default function MostrarHilo() {
                         .then(() => toast.success("Enlace copiado"))
                         .catch(err => console.error("Error al copiar enlace:", err))
                     }}
-                    className="px-4 py-2 bg-gray-700 text-white font-semibold rounded-xl shadow-md hover:scale-105 transition flex items-center gap-2"
+                    className="px-4 cursor-pointer py-2 bg-gray-700 text-white font-semibold rounded-xl shadow-md hover:scale-105 transition flex items-center gap-2"
                   >
                     <i className="fa-solid fa-link"></i>
                     Copiar enlace
@@ -366,7 +366,7 @@ export default function MostrarHilo() {
                 <p className="text-sm text-zinc-700 dark:text-zinc-300 break-words">{respuesta.contenido}</p>
               </div>
               <button
-                className="ml-4 text-red-600 hover:text-red-800 font-bold"
+                className="ml-4 text-red-600 hover:text-red-800 font-bold cursor-pointer"
                 onClick={() => setRespuesta(null)}
               >
                 ✕
@@ -387,7 +387,7 @@ export default function MostrarHilo() {
                 disabled={disabled}
                 className={`w-full sm:w-auto px-6 py-3 bg-gradient-to-r ${tema?.button}
                           disabled:opacity-50 text-white font-bold rounded-xl shadow-md 
-                          hover:scale-105 transition flex items-center justify-center gap-2 order-1 sm:order-2`}
+                          hover:scale-105 transition flex items-center justify-center gap-2 order-1 sm:order-2 cursor-pointer`}
               >
                 <i className="fa-solid fa-paper-plane"></i>
                 {disabled ? `(${contador}s)` : "Enviar"}

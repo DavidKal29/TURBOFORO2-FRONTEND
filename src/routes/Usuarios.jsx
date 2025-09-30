@@ -20,7 +20,7 @@ export default function Usuarios() {
                 <button
                   onClick={() => {
                     toast.dismiss(t);
-                    fetch(`${process.env.REACT_APP_API_URL}/admin/delete_user/${id_usuario}`, { method: 'GET', credentials: 'include' })
+                    fetch(`${process.env.REACT_APP_API_URL}/delete_account/${id_usuario}`, { method: 'GET', credentials: 'include' })
                       .then(res => res.json())
                       .then(data => {
                         if (data.deleted) {

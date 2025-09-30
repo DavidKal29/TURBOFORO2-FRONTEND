@@ -41,7 +41,7 @@ export default function Perfil() {
           <button
             onClick={() => {
               toast.dismiss(t)
-              fetch(`${process.env.REACT_APP_API_URL}/borrar_cuenta`, { method:'GET', credentials:'include' })
+              fetch(`${process.env.REACT_APP_API_URL}/delete_account/${user?.id}`, { method:'GET', credentials:'include' })
                 .then(res => res.json())
                 .then(data => {
                   if (data.deleted) {

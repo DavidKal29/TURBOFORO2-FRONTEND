@@ -137,17 +137,7 @@ export default function Usuario() {
             </h1>
           </div>
 
-          {/* Botón para borrar usuario (solo admins) */}
-          {user && user?.rol === 'admin' && (
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-center justify-center">
-              <button
-                onClick={() => { borrarUsuario(id_usuario) }}
-                className="cursor-pointer w-full bg-gradient-to-r from-red-700 to-red-500 shadow-lg text-white rounded-full px-12 py-3 lg:px-5 font-semibold text-sm md:text-base"
-              >
-                Borrar Cuenta
-              </button>
-            </div>
-          )}
+          
 
         </div>
 

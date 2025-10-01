@@ -242,7 +242,7 @@ export default function MostrarHilo() {
           </p>
         </div>
 
-        {/* Paginación superior */}
+        {/* Paginación */}
         <div className="flex justify-center items-center gap-2 mt-4 flex-wrap pb-6">
           {Array.from({ length: Math.ceil(hilo.mensajes / 39) }, (_, i) => i + 1).map((p, index) => (
             <Link
@@ -344,7 +344,7 @@ export default function MostrarHilo() {
           })}
         </div>
 
-        {/* Paginación inferior */}
+        {/* Paginación */}
         <div className="flex justify-center items-center gap-2 mt-10 flex-wrap pb-20">
           {Array.from({ length: Math.ceil(hilo.mensajes / 39) }, (_, i) => i + 1).map((p, index) => (
             <Link

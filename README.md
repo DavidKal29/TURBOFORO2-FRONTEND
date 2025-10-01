@@ -1,3 +1,64 @@
+# TurboForo2 - Frontend
+
+Esta es la **aplicación frontend de TurboForo2**, desarrollada en **React**, diseñada para interactuar con la API de TurboForo2 y ofrecer una experiencia de usuario fluida, moderna y segura para la gestión de usuarios, publicaciones y comentarios en un foro en línea.
+
+⚠️ **Dependencia:** Esta aplicación consume la API de TurboForo2, por lo que requiere que el backend esté funcionando.
+
+## Funcionalidades principales
+
+### Autenticación y gestión de sesión
+- Registro y login de usuarios mediante el uso de **JWT**.
+- Recuperación de contraseña con integración de token enviado por email.
+- Persistencia de sesión usando cookies seguras.
+
+### Gestión de usuarios
+- Visualización y edición de perfil de usuario.
+- Visualización de hilos, mensajes y datos sobre verificación, veteranía y administración.
+
+### Gestión de publicaciones y comentarios
+- CRUD completo sobre hilos y mensajes y comentarios mediante **fetch** a la API.
+- Actualización del estado de la UI tras crear, editar o eliminar contenido.
+
+### Consumo de API
+- Uso de **fetch** con credenciales (`credentials: 'include'`) para interactuar con el backend.
+- Manejo de respuestas y errores, mostrando notificaciones al usuario.
+- Integración de **CSRF token** para formularios sensibles.
+
+### Routing y protección de rutas
+- Rutas implementadas con **react-router-dom**.
+- Redirección automática según el estado de autenticación del usuario.
+
+### Notificaciones y feedback
+- Uso de **toast** con sonner para alertar sobre acciones exitosas o errores.
+- Mensajes claros cuando fallan operaciones críticas.
+
+### Manejo de estado global
+- **Context API** (`useContext`) para gestionar estado de usuario.
+- Actualización automática del estado tras operaciones CRUD sobre hilos y mensajes.
+
+### Seguridad y buenas prácticas
+- Protección de formularios sensibles con **CSRF tokens**.
+-Protcción de rutas. Si un usuario no está logueado no puede ver rutas como el perfil.
+
+## Tecnologías y Herramientas Utilizadas
+- React
+- React Router DOM
+- fetch
+- Librerías de notificaciones como `sonner`
+- Manejo de cookies y CSRF para seguridad
+
+---
+
+Este frontend está pensado para ser **consumido junto al backend de TurboForo2**, ofreciendo una interfaz completa y segura para usuarios y administradores de un foro en línea.
+
+
+
+
+
+
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

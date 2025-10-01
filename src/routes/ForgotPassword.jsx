@@ -9,6 +9,7 @@ export default function ForgotPassword() {
 
   const [csrfToken, setCsrfToken] = useState('')
   const [form, setForm] = useState({ email: '' })
+  const [disabled,setDisabled] = useState(false)
 
   // manejar cambios del formulario
   const handleChange = (e) => {
@@ -18,6 +19,7 @@ export default function ForgotPassword() {
   // enviar formulario
   const handleSubmit = (e) => {
     e.preventDefault()
+    setDisabled(true)
 
     fetch(`${process.env.REACT_APP_API_URL}/recuperarPassword`, {
       credentials: 'include',
@@ -27,10 +29,22 @@ export default function ForgotPassword() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) toast.error(data.error.msg)
-        else {
-          if (data.message === 'Correo enviado') toast.success(data.message)
-          else toast.error(data.message)
+        if (data.error) {
+          toast.error(data.error)
+        }else {
+          switch (data.message) {
+            case 'Correo enviado':
+              toast.success(data.message)
+              break
+            case 'Error SMTP, Render no deja enviar correos, pero se generó el enlace':
+              toast.warning(data.message)
+              break
+            case 'No hay ninguna cuenta asociada a este correo':
+              toast.error(data.message)
+              break
+            default:
+              toast.error('Ocurrió un error inesperado')
+          }
         }
       })
       .catch(() => toast.error('Error al enviar datos'))
@@ -85,7 +99,8 @@ export default function ForgotPassword() {
         {/* Botón */}
         <button
           type="submit"
-          className="cursor-pointer bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
+          disabled={disabled}
+          className="cursor-pointer bg-green-700 disabled:bg-green-900 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-transform transform hover:scale-105"
         >
           Enviar
         </button>

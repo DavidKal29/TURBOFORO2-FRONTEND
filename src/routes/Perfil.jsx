@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAppContext } from '../context/AppContext'
 import { useNavigate, Link } from 'react-router-dom'
 import { toast } from "sonner";
@@ -6,19 +6,29 @@ import { toast } from "sonner";
 export default function Perfil() {
   const { user, setUser } = useAppContext()
   const navigate = useNavigate()
+  const [disabled,setDisabled] = useState(false)
 
   // Enviar correo de verificación
   const verificarCorreo = () => {
+    setDisabled(true)
+
     fetch(`${process.env.REACT_APP_API_URL}/enviar_verificacion`, {
-      method:'POST',
-      headers:{'Content-Type': 'application/json'},
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: user?.email || null }),
-      credentials:'include'
+      credentials: 'include'
     })
-    .then(res => res.json())
-    .then(data => toast.info(data.message))
-    .catch(() => toast.error('Error al enviar el correo de verificación'))
+      .then(res => res.json())
+      .then(data => {
+        if (data.message === 'Error SMTP, Render no deja enviar correo de verificación') {
+          toast.warning(data.message)
+        } else {
+          toast.success(data.message)
+        }
+      })
+      .catch(() => toast.error('Error al enviar el correo de verificación'))
   }
+
 
   // Logout
   const logout = () => {
@@ -144,7 +154,7 @@ export default function Perfil() {
               </Link>
 
               {!user?.verificado && (
-                <button onClick={verificarCorreo} className="cursor-pointer w-full bg-gradient-to-r from-blue-700 to-blue-500 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
+                <button disabled={disabled} onClick={verificarCorreo} className="cursor-pointer w-full bg-gradient-to-r from-blue-700 to-blue-500 disabled:bg-gradient-to-r disabled:from-blue-800 disabled:to-blue-900 shadow-lg text-white rounded-full px-12 py-3 font-semibold text-sm md:text-base">
                   Verificar Email
                 </button>
               )}

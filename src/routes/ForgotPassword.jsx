@@ -33,14 +33,11 @@ export default function ForgotPassword() {
           toast.error(data.error)
         }else {
           switch (data.message) {
-            case 'Correo enviado':
+            case 'Correo enviado con éxito':
               toast.success(data.message)
               break
-            case 'Error SMTP, Render no deja enviar correos, pero se generó el enlace':
-              toast.warning(data.message)
-              break
             case 'No hay ninguna cuenta asociada a este correo':
-              toast.error(data.message)
+              toast.warning(data.message)
               break
             default:
               toast.error('Ocurrió un error inesperado')

@@ -20,10 +20,10 @@ export default function Perfil() {
     })
       .then(res => res.json())
       .then(data => {
-        if (data.message === 'Error SMTP, Render no deja enviar correo de verificación') {
-          toast.warning(data.message)
-        } else {
+        if (data.message === 'Correo enviado con exito') {
           toast.success(data.message)
+        } else {
+          toast.error(data.message)
         }
       })
       .catch(() => toast.error('Error al enviar el correo de verificación'))
